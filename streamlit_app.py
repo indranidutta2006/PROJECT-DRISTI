@@ -28,7 +28,7 @@ st.markdown("""
 
     /* Main headers */
     h1, h2, h3 {
-        color: #002b5c;
+        color: #fcfcfc;
     }
 
     /* Dataframe table font */
