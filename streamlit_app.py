@@ -131,46 +131,7 @@ elif page == "Dashboard":
             ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             st.pyplot(fig1)
-            # === Detailed View on Click ===
-            student_id = st.selectbox("Select Student to View Details", df["StudentID"])
 
-            if student_id:
-                student_data = df[df["StudentID"] == student_id].iloc[0]
-
-                # Plot Risk Score in a half-circle gauge
-                fig, ax = plt.subplots(figsize=(5, 3))
-                ax.set_xlim(0, 100)
-                ax.set_ylim(0, 1)
-                ax.barh(0, student_data["RiskScore"], color="red", height=0.3, align="center")
-                ax.text(student_data["RiskScore"] - 5, 0, f'{student_data["RiskScore"]}%', fontsize=14, color='white', ha='center', va='center')
-
-                ax.set_yticks([])
-                ax.set_xticks([0, 50, 100])
-                ax.set_xticklabels([0, 50, 100], fontsize=10)
-                ax.set_title(f"Student {student_id} Risk Score", fontsize=16)
-                st.pyplot(fig)
-
-                # Academic Performance and Attendance Line Chart
-                st.subheader(f"📈 Academic Performance and Attendance for Student {student_id}")
-                st.line_chart({
-                    "Marks": df[df["StudentID"] == student_id]["Marks"],
-                    "Attendance": df[df["StudentID"] == student_id]["Attendance"]
-                })
-
-                # Fees Due Table
-                st.subheader(f"💰 Fees Due for Student {student_id}")
-                st.table(pd.DataFrame({
-                    "StudentID": [student_id],
-                    "Fees Due": [student_data["FeesDue"]]
-                }))
-
-                # Recommended Actions Table
-                st.subheader(f"📝 Recommended Actions for Student {student_id}")
-                recommended_actions = pd.DataFrame({
-                    "Action": ["Monitor Attendance", "Review Marks Progress", "Follow up on Fees Payment"],
-                    "Urgency": ["High", "Medium", "High"]
-                })
-                st.table(recommended_actions)
 
 # ========================= # About Page # =========================
 elif page == "About":
