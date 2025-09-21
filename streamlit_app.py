@@ -60,7 +60,6 @@ st.title("🏫 Project Drishti – Student Success Early Warning System")
 st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
 
 # ========================= # Upload Page # =========================
-# ========================= # Upload Page # =========================
 if page == "Upload Excel/CSV":
     st.header("Upload Student Data")
     uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx","xls","csv"])
@@ -133,7 +132,7 @@ elif page == "Dashboard":
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             st.pyplot(fig1)
             
-             # === Sorted Risk Table with Slider ===
+             # === Sorted Risk Table (Scrollable, 5 rows visible) ===
             st.subheader("📊 Students Sorted by Risk Level")
 
             risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
@@ -141,20 +140,13 @@ elif page == "Dashboard":
             sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
             sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
             sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
-            # Slider to navigate students
-            total_students = len(sorted_df)
-            start_index = st.slider(
-            "Scroll through students",
-            min_value=0,
-            max_value=max(0, total_students - 5),
-            value=0,
-            step=5
 
-            
-            )
+            # Show as scrollable dataframe with ~5 rows visible
+            row_height = 35  # px per row approx
+            visible_rows = 5
+            table_height = row_height * (visible_rows + 1)  # +1 for header
 
-            # Show 5 students at a time
-            st.table(sorted_df.iloc[start_index:start_index + 5])
+            st.dataframe(sorted_df, height=table_height)
 
 # ========================= # Attendance Page # =========================
 elif page == "Student Attendance":
