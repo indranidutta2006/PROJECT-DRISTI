@@ -127,7 +127,7 @@ elif page == "Dashboard":
             # === Risk Distribution Pie Chart ===
             st.subheader("🥧 Risk Distribution (Pie Chart)")
             fig1, ax1 = plt.subplots()
-            colors = ['#ff4b4b', '#ffa500', '#90ee90']  # red, orange, lightgreen
+            colors = ['#90ee90', '#ffa500', '#ff4b4b']  #lightgreen , orange, red
             labels = risk_counts.index.tolist()
             sizes = risk_counts.values.tolist()
 
