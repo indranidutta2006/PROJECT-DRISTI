@@ -25,6 +25,15 @@ st.markdown("""
     [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
         color: white !important;
     }
+    /* Make radio label text white */
+    [data-testid="stSidebar"] .stRadio > label, 
+    [data-testid="stSidebar"] .stRadio div {
+        color: white !important;
+    }
+
+    [data-testid="stSidebar"] .stRadio span {
+        color: white !important;
+    }
 
     /* Main headers */
     h1, h2, h3 {
@@ -34,8 +43,6 @@ st.markdown("""
     /* Dataframe table font */
     .stDataFrame {
         font-size: 14px;
-     .css-1n7v3kd {  /* This class targets the radio button */
-            color: white;
     }
     </style>
 """, unsafe_allow_html=True)
