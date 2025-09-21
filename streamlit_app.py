@@ -61,7 +61,7 @@ st.markdown("Helping educators move from **reactive** to **proactive** mentoring
 
 # ========================= # Upload Page # =========================
 # ========================= # Upload Page # =========================
-if page == "Upload Data":
+if page == "Upload Excel/CSV":
     st.header("Upload Student Data")
     uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx","xls","csv"])
 
