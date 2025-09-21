@@ -63,36 +63,22 @@ st.markdown("Helping educators move from **reactive** to **proactive** mentoring
 # ========================= # Upload Page # =========================
 if page == "Upload Data":
     st.header("Upload Student Data")
-    uploaded_file = st.file_uploader(
-        "Choose an Excel or CSV file", 
-        type=["xlsx", "xls", "csv"], 
-        accept_multiple_files=False, 
-        key="fileUploader"
-    )
+    uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx","xls","csv"])
 
     if uploaded_file is not None:
         try:
-            # Read file based on extension
-            file_ext = uploaded_file.name.split(".")[-1].lower()
-            
-            if file_ext in ["xlsx", "xls"]:
-                df = pd.read_excel(uploaded_file, engine="openpyxl")
-            elif file_ext == "csv":
-                df = pd.read_csv(uploaded_file)
+            if uploaded_file.name.endswith(("xlsx","xls")):
+                df = pd.read_excel(uploaded_file)
             else:
-                st.error("❌ Unsupported file format. Please upload CSV or Excel.")
-                df = None
+                df = pd.read_csv(uploaded_file)
 
-            if df is not None:
-                st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
-                st.write("Here is a sample of your data:")
-                st.dataframe(df.head())
-
-                # Store safely in session state
-                st.session_state["data"] = df
+            st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
+            st.write("Here is a sample of your data:")
+            st.dataframe(df.head())
+            st.session_state["data"] = df
 
         except Exception as e:
-            st.error(f"⚠️ Error reading file: {e}")
+            st.error(f"Error reading file: {e}")
 
 # ========================= # Dashboard Page # =========================
 elif page == "Dashboard":
