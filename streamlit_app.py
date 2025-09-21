@@ -122,15 +122,15 @@ elif page == "Dashboard":
 
             # === Risk Distribution Pie Chart ===
             st.subheader("🥧 Risk Distribution (Pie Chart)")
+            risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
-            colors = ['#90ee90', '#ffa500', '#ff4b4b']  #lightgreen , orange, red
+            colors = ['#90ee90', '#ffa500', '#ff4b4b']  # red, orange, lightgreen
             labels = risk_counts.index.tolist()
             sizes = risk_counts.values.tolist()
 
             ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             st.pyplot(fig1)
-
             # === Detailed View on Click ===
             student_id = st.selectbox("Select Student to View Details", df["StudentID"])
 
