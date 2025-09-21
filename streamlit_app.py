@@ -113,7 +113,7 @@ elif page == "Dashboard":
                 if val == "High Risk":
                     return "background-color: red; color: white;"
                 elif val == "Medium Risk":
-                    return "background-color: orange; color: black;"
+                    return "background-color: yellow; color: black;"
                 elif val == "Low Risk":
                     return "background-color: lightgreen; color: black;"
                 return ""
@@ -125,7 +125,7 @@ elif page == "Dashboard":
             st.subheader("🥧 Risk Distribution (Pie Chart)")
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
-            colors = ['#90ee90', '#ffa500', '#ff4b4b']  # red, orange, lightgreen
+            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
             labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
             sizes = risk_counts.values.tolist()
 
