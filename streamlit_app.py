@@ -142,9 +142,6 @@ elif page == "Dashboard":
             sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
             sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
 
-            
-            )
-
             # Show 5 students at a time
             st.table(sorted_df.iloc[start_index:start_index + 5])
 
