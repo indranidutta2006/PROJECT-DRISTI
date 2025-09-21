@@ -34,6 +34,8 @@ st.markdown("""
     /* Dataframe table font */
     .stDataFrame {
         font-size: 14px;
+     .css-1n7v3kd {  /* This class targets the radio button */
+            color: white;
     }
     </style>
 """, unsafe_allow_html=True)
