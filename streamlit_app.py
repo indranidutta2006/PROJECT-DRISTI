@@ -53,7 +53,7 @@ try:
 except Exception:
     st.sidebar.markdown("**Project Drishti**")
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Dashboard", "Upload Excel/CSV", "About"])
+page = st.sidebar.radio("Go to", ["Dashboard", "Upload Excel/CSV", "Student Attendance", "Student Marks", "Fees Status", "About"])
 
 # ========================= # Title # =========================
 st.title("🏫 Project Drishti – Student Success Early Warning System")
@@ -153,6 +153,43 @@ elif page == "Dashboard":
 
             # Show 5 students at a time
             st.table(sorted_df.iloc[start_index:start_index + 5])
+
+# ========================= # Attendance Page # =========================
+elif page == "Student Attendance":
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
+        df = st.session_state["data"].copy()
+        if "Attendance" not in df.columns:
+            st.error("Attendance column missing in uploaded file.")
+        else:
+            st.header("📅 Student Attendance Overview")
+            st.bar_chart(df.set_index("StudentID")["Attendance"])
+
+# ========================= # Fees Status Page # =========================
+elif page == "Fees Status":
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
+        df = st.session_state["data"].copy()
+        if "FeesDue" not in df.columns:
+            st.error("FeesDue column missing in uploaded file.")
+        else:
+            st.header("💰 Student Fees Status")
+            st.dataframe(df[["StudentID", "FeesDue"]])
+            st.bar_chart(df.set_index("StudentID")["FeesDue"])
+
+# ========================= # Marks Page # =========================
+elif page == "Student Marks":
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
+        df = st.session_state["data"].copy()
+        if "Marks" not in df.columns:
+            st.error("Marks column missing in uploaded file.")
+        else:
+            st.header("📊 Student Marks Overview")
+            st.line_chart(df.set_index("StudentID")["Marks"])
 
 
 # ========================= # About Page # =========================
