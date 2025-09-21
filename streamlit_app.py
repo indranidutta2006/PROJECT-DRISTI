@@ -5,19 +5,19 @@ import numpy as np
 import seaborn as sns
 
 # ========================= # Page Config # =========================
-st.set_page_config(page_title="Project Drishti", layout="wide")
+st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_state="expanded")
 
 # ========================= # Custom Theme Styling # =========================
 st.markdown("""
     <style>
     /* Whole page background */
     .reportview-container {
-        background-color: #f4f8fb;
+        background-color: #ffffff;
     }
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background-color: #002b5c; /* Dark blue */
+        background-color: #aa5ee0; /* Dark blue */
         color: white;
     }
 
