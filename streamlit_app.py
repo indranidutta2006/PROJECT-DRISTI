@@ -170,8 +170,15 @@ elif page == "Fees Status":
             st.error("FeesDue column missing in uploaded file.")
         else:
             st.header("💰 Student Fees Status")
-            # Display only the table, no bar chart
-            st.dataframe(df[["StudentID", "FeesDue"]])
+
+            # Color coding function
+            def highlight_fees(val):
+                if val == 0:
+                    return "background-color: lightgreen; color: black;"
+                else:
+                    return "background-color: red; color: white;"
+
+            st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Marks Page # =========================
 elif page == "Student Marks":
