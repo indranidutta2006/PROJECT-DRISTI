@@ -53,7 +53,7 @@ try:
 except Exception:
     st.sidebar.markdown("**Project Drishti**")
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Dashboard", "Upload Data", "About"])
+page = st.sidebar.radio("Go to", ["Dashboard", "Upload Excel/CSV", "About"])
 
 # ========================= # Title # =========================
 st.title("🏫 Project Drishti – Student Success Early Warning System")
