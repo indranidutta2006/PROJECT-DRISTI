@@ -141,6 +141,17 @@ elif page == "Dashboard":
             sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
             sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
             sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
+            # Slider to navigate students
+            total_students = len(sorted_df)
+            start_index = st.slider(
+            "Scroll through students",
+            min_value=0,
+            max_value=max(0, total_students - 5),
+            value=0,
+            step=5
+
+            
+            )
 
             # Show 5 students at a time
             st.table(sorted_df.iloc[start_index:start_index + 5])
