@@ -131,6 +131,15 @@ elif page == "Dashboard":
             ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             st.pyplot(fig1)
+            
+             # === Sorted Risk Table ===
+            st.subheader("📊 Students Sorted by Risk Level")
+            risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
+            sorted_df = df[["StudentID", "Risk"]].copy()
+            sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
+            sorted_df = sorted_df.sort_values(by="RiskOrder").drop(columns="RiskOrder")
+
+            st.table(sorted_df.reset_index(drop=True))
 
 
 # ========================= # About Page # =========================
