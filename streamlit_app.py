@@ -120,10 +120,6 @@ elif page == "Dashboard":
             st.subheader("📋 Student Risk Scores")
             st.dataframe(df.style.applymap(highlight_risk, subset=["Risk"]))
 
-            # === Risk Distribution Chart ===
-            st.subheader("📊 Risk Distribution")
-            risk_counts = df["Risk"].value_counts()
-            st.bar_chart(risk_counts)
             # === Risk Distribution Pie Chart ===
             st.subheader("🥧 Risk Distribution (Pie Chart)")
             fig1, ax1 = plt.subplots()
