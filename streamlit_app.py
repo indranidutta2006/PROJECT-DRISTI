@@ -121,7 +121,7 @@ elif page == "Dashboard":
                 student_data = df[df["StudentID"] == student_id].iloc[0]
 
                 # Plot Risk Score in a half-circle gauge
-                fig, ax = plt.subplots(figsize=(5, 3))
+                #fig, ax = plt.subplots(figsize=(5, 3))
                 ax.set_xlim(0, 100)
                 ax.set_ylim(0, 1)
                 ax.barh(0, student_data["RiskScore"], color="red", height=0.3, align="center")
