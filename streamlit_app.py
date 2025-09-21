@@ -132,14 +132,27 @@ elif page == "Dashboard":
             ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
             st.pyplot(fig1)
             
-             # === Sorted Risk Table ===
+             # === Sorted Risk Table with Slider ===
             st.subheader("📊 Students Sorted by Risk Level")
-            risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
-            sorted_df = df[["StudentID", "Risk"]].copy()
-            sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
-            sorted_df = sorted_df.sort_values(by="RiskOrder").drop(columns="RiskOrder")
 
-            st.table(sorted_df.reset_index(drop=True))
+            risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
+            sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
+            sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
+            sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
+            sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
+
+            # Slider to navigate students
+            total_students = len(sorted_df)
+            start_index = st.slider(
+            "Scroll through students",
+            min_value=0,
+            max_value=max(0, total_students - 5),
+            value=0,
+            step=5
+            )
+
+            # Show 5 students at a time
+            st.table(sorted_df.iloc[start_index:start_index + 5])
 
 
 # ========================= # About Page # =========================
