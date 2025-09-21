@@ -170,8 +170,8 @@ elif page == "Fees Status":
             st.error("FeesDue column missing in uploaded file.")
         else:
             st.header("💰 Student Fees Status")
+            # Display only the table, no bar chart
             st.dataframe(df[["StudentID", "FeesDue"]])
-            st.bar_chart(df.set_index("StudentID")["FeesDue"])
 
 # ========================= # Marks Page # =========================
 elif page == "Student Marks":
