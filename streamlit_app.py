@@ -125,7 +125,7 @@ elif page == "Dashboard":
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
             colors = ['#90ee90', '#ffa500', '#ff4b4b']  # red, orange, lightgreen
-            labels = risk_counts.index.tolist()
+            labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
             sizes = risk_counts.values.tolist()
 
             ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
