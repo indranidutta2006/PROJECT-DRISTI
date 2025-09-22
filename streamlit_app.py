@@ -123,7 +123,7 @@ elif page == "Dashboard":
             st.dataframe(df.style.applymap(highlight_risk, subset=["Risk"]))
 
             # === Risk Distribution Pie Chart ===
-            st.subheader("🥧 Risk Distribution (Pie Chart)")
+            st.subheader("Risk Distribution (Pie Chart)")
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
             colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
