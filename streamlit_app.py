@@ -71,6 +71,7 @@ with tab1:
             st.error(f"Error reading file: {e}")
 
 # ========================= # Dashboard Page # =========================
+# ========================= # Dashboard Page # =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
     st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
@@ -78,29 +79,7 @@ with tab2:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
-        df = st.session_state["data"].copy()
-
-        # === Risk Score Calculation ===
-        df["AvgMarks"] = (df["LastSemMarks"] + df["CurrentSemMarks"]) / 2
-        df["FeesPenalty"] = df["FeesDue"] * 20
-        df["RiskScore"] = 100 - (
-            0.3 * df["Attendance"] +
-            0.3 * df["AvgMarks"] +
-            0.2 * df["AssignmentSubmission"] -
-            5 * df["BacklogAssignments"] +
-            df["FeesPenalty"]
-        )
-        df["RiskScore"] = df["RiskScore"].clip(lower=0).round(1)
-
-        def risk_level(score):
-            if score >= 75:
-                return "High Risk"
-            elif score >= 50:
-                return "Medium Risk"
-            else:
-                return "Low Risk"
-
-        df["Risk"] = df["RiskScore"].apply(risk_level)
+        df = calculate_risk_scores(st.session_state["data"])
 
         st.subheader("📋 Student Risk Scores")
         df_display = df.copy()
@@ -111,11 +90,46 @@ with tab2:
                 return "background-color: red; color: white;"
             elif val == "Medium Risk":
                 return "background-color: yellow; color: black;"
-            else:
+            elif val == "Low Risk":
                 return "background-color: lightgreen; color: black;"
+            return ""
 
         st.dataframe(df_display.style.applymap(highlight_risk, subset=["Risk"]), hide_index=True)
 
+        # Risk Distribution + Sorted Table
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.subheader("Student Dropout Risk Distribution")
+            risk_counts = df["Risk"].value_counts()
+            fig1, ax1 = plt.subplots()
+            colors = ['#ff4b4b', '#f5d90a', '#90ee90']  # red, yellow, green
+            labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
+            sizes = risk_counts.values.tolist()
+
+            ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', 
+                    startangle=90, textprops={'fontsize': 10})
+            ax1.axis('equal')
+            st.pyplot(fig1)
+
+        with col2:
+            st.markdown(
+                '<h3 style="color: red; font-weight: bold; font-size: 24px;font-family: Georgia, serif;">'
+                'Students Sorted by Risk Level</h3>', 
+                unsafe_allow_html=True
+            )
+
+            risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
+            sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
+            sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
+            sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
+            sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
+            sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
+
+            # Scrollable table (5 rows visible)
+            row_height = 35  # px per row approx
+            visible_rows = 5
+            table_height = row_height * (visible_rows + 1)
+            st.dataframe(sorted_df, height=table_height, hide_index=True)
 # ========================= # Attendance Page # =========================
 with tab3:
     if "data" in st.session_state:
