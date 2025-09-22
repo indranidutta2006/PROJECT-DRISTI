@@ -60,8 +60,8 @@ st.sidebar.title("Navigation")
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Dashboard", "Upload Excel/CSV", "Student Attendance", "Student Marks", "Fees Status", "About"])
 
 # ========================= # Title # =========================
-st.title("🏫 Project Drishti – Student Success Early Warning System")
-st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+#st.title("🏫 Project Drishti – Student Success Early Warning System")
+#st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
 
 # ========================= # Upload Page # =========================
 with tab2:
