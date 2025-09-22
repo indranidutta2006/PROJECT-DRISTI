@@ -76,10 +76,11 @@ with tab1:
                 df = pd.read_csv(uploaded_file)
                 
             df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+            st.session_state["data"] = df
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
             st.write("Here is a sample of your data:")
             st.dataframe(df.head())
-            st.session_state["data"] = df
+            
 
         except Exception as e:
             st.error(f"Error reading file: {e}")
