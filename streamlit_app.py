@@ -75,9 +75,9 @@ with tab1:
             else:
                 df = pd.read_csv(uploaded_file, index_col=False)
 
-        # ✅ Sanitize the DataFrame
-        df = df.reset_index(drop=True)
-        df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+            # ✅ Sanitize the DataFrame
+            df = df.reset_index(drop=True)
+            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
             st.session_state["data"] = df
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
