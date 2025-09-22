@@ -85,8 +85,11 @@ with tab2:
 
 # ========================= # Dashboard Page # =========================
 with tab1:
+     st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
     if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first from the sidebar.")
+        st.warning("⚠️ Please upload student data first from the Upload Excel/CSV tab.")
     else:
         df = st.session_state["data"].copy()
 
