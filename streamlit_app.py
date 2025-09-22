@@ -128,9 +128,7 @@ with tab1:
             st.subheader("Student Dropout Risk")
             st.markdown("### Risk Level Color Codes")
             st.markdown("""
-            - 🔴High Dropout Risk – /*Students with a Risk Score ≥ 75*/
-            - 🟡Medium Dropout Risk – Students with a Risk Score between 50–74
-            - 🟢**Low Dropout Risk – Students with a Risk Score < 50
+            - 🔴High Dropout Risk                  🟡Medium Dropout Risk                     🟢Low Dropout Risk
             """)
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
