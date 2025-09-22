@@ -74,7 +74,8 @@ with tab1:
                 df = pd.read_excel(uploaded_file)
             else:
                 df = pd.read_csv(uploaded_file)
-
+                
+            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
             st.write("Here is a sample of your data:")
             st.dataframe(df.head())
