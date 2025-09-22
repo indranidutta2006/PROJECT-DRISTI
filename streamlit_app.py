@@ -70,12 +70,12 @@ with tab1:
 
     if uploaded_file is not None:
         try:
-            if uploaded_file.name.endswith(("xlsx","xls")):
+            if uploaded_file.name.endswith(("xlsx", "xls")):
                 df = pd.read_excel(uploaded_file)
             else:
                 df = pd.read_csv(uploaded_file, index_col=False)
 
-            # ✅ Sanitize the DataFrame
+           # Remove old index and unnamed columns
             df = df.reset_index(drop=True)
             df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
