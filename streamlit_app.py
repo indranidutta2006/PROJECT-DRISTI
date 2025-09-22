@@ -126,6 +126,12 @@ with tab1:
 
             # === Risk Distribution Pie Chart ===
             st.subheader("Student Dropout Risk")
+            st.markdown("### 🟨 Risk Level Color Codes")
+            st.markdown("""
+            - 🟥 **High Risk** – Students with a Risk Score ≥ 75
+            - 🟨 **Medium Risk** – Students with a Risk Score between 50–74
+            - 🟩 **Low Risk** – Students with a Risk Score < 50
+            """)
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
             colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
