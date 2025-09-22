@@ -154,7 +154,7 @@ with tab2:
             st.subheader("Student Dropout Risk Distribution")
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
-            colors = ['#ff4b4b', '#f5d90a', '#90ee90']  # red, yellow, green
+            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, green
             labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
             sizes = risk_counts.values.tolist()
 
