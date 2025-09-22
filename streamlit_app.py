@@ -64,7 +64,7 @@ st.title("🏫 Project Drishti – Student Success Early Warning System")
 st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
 
 # ========================= # Upload Page # =========================
-if tab2 == "Upload Excel/CSV":
+with tab2:
     st.header("Upload Student Data")
     uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx","xls","csv"])
 
@@ -84,7 +84,7 @@ if tab2 == "Upload Excel/CSV":
             st.error(f"Error reading file: {e}")
 
 # ========================= # Dashboard Page # =========================
-elif tab1 == "Dashboard":
+with tab1:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first from the sidebar.")
     else:
@@ -153,7 +153,7 @@ elif tab1 == "Dashboard":
             st.dataframe(sorted_df, height=table_height)
 
 # ========================= # Attendance Page # =========================
-elif tab3 == "Student Attendance":
+with tab3:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -165,7 +165,7 @@ elif tab3 == "Student Attendance":
             st.bar_chart(df.set_index("StudentID")["Attendance"])
 
 # ========================= # Fees Status Page # =========================
-elif tab5 == "Fees Status":
+with tab5:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -185,7 +185,7 @@ elif tab5 == "Fees Status":
             st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Marks Page # =========================
-elif tab4 == "Student Marks":
+with tab4:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -198,7 +198,7 @@ elif tab4 == "Student Marks":
 
 
 # ========================= # About Page # =========================
-elif tab6 == "About":
+with tab6:
     st.header("ℹ️ About Project Drishti")
     st.markdown("""
     **Drishti** is an early warning system for schools/colleges. It unifies student data and shows real-time **Student at Risk (StAR) scores**. 
