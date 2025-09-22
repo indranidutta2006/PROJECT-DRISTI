@@ -33,7 +33,7 @@ except Exception:
     st.sidebar.markdown("**Project Drishti**")
 
 st.sidebar.title("Navigation")
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
+tab1, tab2, tab3, tab4, tab5, tab6, tab7,tab8 = st.tabs(
     ["Upload Excel/CSV", "Dashboard", "Attendance", "Marks", "Assignments", "Fees Status", "Student Details", "About"]
 )
 
@@ -181,7 +181,7 @@ with tab7:
             """, unsafe_allow_html=True)
 
 # ========================= # About Page # =========================
-with st.tabs(["About"])[0]:
+with tab8:
     st.header("ℹ️ About Project Drishti")
     st.markdown("""
     **Drishti** is an early warning system for schools/colleges. It unifies student data and shows real-time **Student at Risk (StAR) scores**. 
