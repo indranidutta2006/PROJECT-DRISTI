@@ -153,7 +153,7 @@ elif tab1 == "Dashboard":
             st.dataframe(sorted_df, height=table_height)
 
 # ========================= # Attendance Page # =========================
-elif page == "Student Attendance":
+elif tab3 == "Student Attendance":
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -165,7 +165,7 @@ elif page == "Student Attendance":
             st.bar_chart(df.set_index("StudentID")["Attendance"])
 
 # ========================= # Fees Status Page # =========================
-elif page == "Fees Status":
+elif tab5 == "Fees Status":
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -185,7 +185,7 @@ elif page == "Fees Status":
             st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Marks Page # =========================
-elif page == "Student Marks":
+elif tab4 == "Student Marks":
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
@@ -198,7 +198,7 @@ elif page == "Student Marks":
 
 
 # ========================= # About Page # =========================
-elif page == "About":
+elif tab6 == "About":
     st.header("ℹ️ About Project Drishti")
     st.markdown("""
     **Drishti** is an early warning system for schools/colleges. It unifies student data and shows real-time **Student at Risk (StAR) scores**. 
