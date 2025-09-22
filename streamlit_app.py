@@ -70,7 +70,59 @@ with tab1:
         except Exception as e:
             st.error(f"Error reading file: {e}")
 
-# ========================= # Dashboard Page # =========================
+def calculate_risk_scores(df):
+    """
+    Calculate dropout risk score based on attendance, marks, assignments, and fees.
+    """
+    risk_scores = []
+    risk_labels = []
+
+    for _, row in df.iterrows():
+        score = 0
+
+        # Attendance
+        if row["Attendance"] < 60:
+            score += 2
+        elif row["Attendance"] < 75:
+            score += 1
+
+        # Marks
+        avg_marks = (row["LastSemMarks"] + row["CurrentSemMarks"]) / 2
+        if avg_marks < 40:
+            score += 2
+        elif avg_marks < 50:
+            score += 1
+
+        # Assignments
+        if row["BacklogAssignments"] > 3:
+            score += 2
+        elif row["BacklogAssignments"] > 0:
+            score += 1
+
+        if row["AssignmentSubmission"] < 50:
+            score += 2
+        elif row["AssignmentSubmission"] < 75:
+            score += 1
+
+        # Fees
+        if row["FeesDue"] == 1:
+            score += 2
+
+        # Assign label
+        if score >= 6:
+            risk = "High Risk"
+        elif score >= 3:
+            risk = "Medium Risk"
+        else:
+            risk = "Low Risk"
+
+        risk_scores.append(score)
+        risk_labels.append(risk)
+
+    df["RiskScore"] = risk_scores
+    df["Risk"] = risk_labels
+
+    return df
 # ========================= # Dashboard Page # =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
