@@ -128,7 +128,7 @@ with tab1:
             st.subheader("Student Dropout Risk")
             st.markdown("### Risk Level Color Codes")
             st.markdown("""
-            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
+            <div style="display: flex; justify-content: space-between; font-size: 18px;">
             <div style="text-align: left;">🔴 High Dropout Risk</div>
             <div style="text-align: center;">🟡 Medium Dropout Risk</div>
             <div style="text-align: right;">🟢 Low Dropout Risk</div>
