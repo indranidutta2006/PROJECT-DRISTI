@@ -149,7 +149,7 @@ with tab2:
                 labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
                 sizes = risk_counts.values.tolist()
 
-                ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+                ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 10})
                 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
                 st.pyplot(fig1)
             
