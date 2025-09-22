@@ -127,41 +127,41 @@ with tab1:
             # === Risk Distribution Pie Chart ===
             col1, col2 = st.columns([1, 1])
             with col1:
-            st.subheader("Student Dropout Risk")
-            st.markdown("### Risk Level Color Codes")
-            st.markdown("""
-            <div style="display: flex; justify-content: space-between; font-size: 18px;">
-            <div style="text-align: left;">🔴 High Dropout Risk</div>
-            <div style="text-align: center;">🟡 Medium Dropout Risk</div>
-            <div style="text-align: right;">🟢 Low Dropout Risk</div>
-            </div>
-            """, unsafe_allow_html=True)
-            risk_counts = df["Risk"].value_counts()
-            fig1, ax1 = plt.subplots()
-            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
-            labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
-            sizes = risk_counts.values.tolist()
+                st.subheader("Student Dropout Risk")
+                st.markdown("### Risk Level Color Codes")
+                st.markdown("""
+                <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                <div style="text-align: left;">🔴 High Dropout Risk</div>
+                <div style="text-align: center;">🟡 Medium Dropout Risk</div>
+                <div style="text-align: right;">🟢 Low Dropout Risk</div>
+                </div>
+                """, unsafe_allow_html=True)
+                risk_counts = df["Risk"].value_counts()
+                fig1, ax1 = plt.subplots()
+                colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
+                labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
+                sizes = risk_counts.values.tolist()
 
-            ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-            ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-            st.pyplot(fig1)
+                ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+                ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+                st.pyplot(fig1)
             
              # === Sorted Risk Table (Scrollable, 5 rows visible) ===
             with col2:
-            st.subheader("Students Sorted by Risk Level")
+                st.subheader("Students Sorted by Risk Level")
 
-            risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
-            sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
-            sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
-            sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
-            sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
+                risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
+                sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
+                sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
+                sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
+                sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
 
             # Show as scrollable dataframe with ~5 rows visible
-            row_height = 35  # px per row approx
-            visible_rows = 5
-            table_height = row_height * (visible_rows + 1)  # +1 for header
+                row_height = 35  # px per row approx
+                visible_rows = 5
+                table_height = row_height * (visible_rows + 1)  # +1 for header
 
-            st.dataframe(sorted_df, height=table_height)
+                st.dataframe(sorted_df, height=table_height)
 
 # ========================= # Attendance Page # =========================
 with tab3:
