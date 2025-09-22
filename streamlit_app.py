@@ -73,9 +73,12 @@ with tab1:
             if uploaded_file.name.endswith(("xlsx","xls")):
                 df = pd.read_excel(uploaded_file)
             else:
-                df = pd.read_csv(uploaded_file)
-                
-            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+                df = pd.read_csv(uploaded_file, index_col=False)
+
+        # ✅ Sanitize the DataFrame
+        df = df.reset_index(drop=True)
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+
             st.session_state["data"] = df
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
             st.write("Here is a sample of your data:")
