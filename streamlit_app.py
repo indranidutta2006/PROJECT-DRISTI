@@ -149,37 +149,59 @@ with tab6:
         st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details Page # =========================
-with tab7:
-    if "data" in st.session_state:
+with tab7:  # Student Tab
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
         df = st.session_state["data"].copy()
-        st.header("👤 Student Details")
-        student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
 
-        if student_id:
+        required_cols = ["StudentID", "Attendance", "LastSemMarks", "CurrentSemMarks", 
+                         "BacklogAssignments", "AssignmentSubmission", "FeesDue"]
+        missing = [c for c in required_cols if c not in df.columns]
+        if missing:
+            st.error(f"Missing columns: {missing}. Please upload correct file.")
+        else:
+            # === Risk Score Calculation (same logic as Dashboard) ===
+            df["MarksAvg"] = (df["LastSemMarks"] + df["CurrentSemMarks"]) / 2
+            df["AssignmentPenalty"] = df["BacklogAssignments"] * 5
+            df["FeesDeduction"] = df["FeesDue"] * 20
+
+            df["RiskScore"] = 100 - (
+                0.3 * df["Attendance"] +
+                0.3 * df["MarksAvg"] +
+                0.2 * df["AssignmentSubmission"] -
+                df["AssignmentPenalty"] -
+                df["FeesDeduction"]
+            )
+            df["RiskScore"] = df["RiskScore"].clip(lower=0).round(1)
+
+            def risk_level(score):
+                if score >= 75:
+                    return "High Risk"
+                elif score >= 50:
+                    return "Medium Risk"
+                else:
+                    return "Low Risk"
+
+            df["Risk"] = df["RiskScore"].apply(risk_level)
+
+            # === Student Lookup ===
+            st.header("🔍 Individual Student Overview")
+            student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
+
             student = df[df["StudentID"] == student_id].iloc[0]
 
-            if student["Risk"] == "High Risk":
-                risk_style = "background-color: red; color: white; padding:10px; border-radius:8px;"
-            elif student["Risk"] == "Medium Risk":
-                risk_style = "background-color: yellow; color: black; padding:10px; border-radius:8px;"
-            else:
-                risk_style = "background-color: lightgreen; color: black; padding:10px; border-radius:8px;"
-
-            st.markdown(f"""
-            <div style="font-size:20px;">
-                <b>📌 Student ID:</b> {student['StudentID']}<br>
-                <b>📅 Attendance:</b> {student['Attendance']}%<br>
-                <b>📊 Last Sem Marks:</b> {student['LastSemMarks']}<br>
-                <b>📊 Current Sem Marks:</b> {student['CurrentSemMarks']}<br>
-                <b>📝 Backlog Assignments:</b> {student['BacklogAssignments']}<br>
-                <b>📂 Assignment Submission:</b> {student['AssignmentSubmission']}%<br>
-                <b>💰 Fees Status:</b> {"✅ Paid" if student['FeesDue']==0 else "❌ Due"}<br><br>
-                <div style="{risk_style}">
-                    <b>Dropout Risk:</b> {student['Risk']} (Score: {student['RiskScore']})
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
+            st.subheader(f"📌 Student ID: {student_id}")
+            st.write(f"**Attendance:** {student['Attendance']}%")
+            st.write(f"**Last Sem Marks:** {student['LastSemMarks']}")
+            st.write(f"**Current Sem Marks:** {student['CurrentSemMarks']}")
+            st.write(f"**Backlog Assignments:** {student['BacklogAssignments']}")
+            st.write(f"**Assignments Submitted:** {student['AssignmentSubmission']}%")
+            st.write(f"**Fees Due:** {'Yes' if student['FeesDue']==1 else 'No'}")
+            st.write(f"**Risk Score:** {student['RiskScore']}")
+            st.markdown(f"**Dropout Risk:** "
+                        f"<span style='color: {'red' if student['Risk']=='High Risk' else 'orange' if student['Risk']=='Medium Risk' else 'green'}; "
+                        f"font-weight: bold;'>{student['Risk']}</span>", unsafe_allow_html=True)
 # ========================= # About Page # =========================
 with tab8:
     st.header("ℹ️ About Project Drishti")
