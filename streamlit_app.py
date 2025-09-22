@@ -125,7 +125,9 @@ with tab2:
                 return ""
 
             st.subheader("📋 Student Risk Scores")
-            st.dataframe(df.style.applymap(highlight_risk, subset=["Risk"]))
+            df_display = df.copy()
+            df_display.insert(0, "Sl No", range(1, len(df_display) + 1))
+            st.dataframe(df_display.style.applymap(highlight_risk, subset=["Risk"]))
 
             # === Risk Distribution Pie Chart ===
             col1, col2 = st.columns([1, 1])
@@ -165,7 +167,7 @@ with tab2:
                 row_height = 35  # px per row approx
                 visible_rows = 5
                 table_height = row_height * (visible_rows + 1)  # +1 for header
-
+                sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
                 st.dataframe(sorted_df, height=table_height)
 
 # ========================= # Attendance Page # =========================
