@@ -19,7 +19,7 @@ st.markdown("""
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background-color: #aa5ee0; /* Dark blue */
+        background-color: #aa5ee0; /* Purple */
         color: white;
     }
 
@@ -27,11 +27,12 @@ st.markdown("""
     [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
         color: white !important;
     }
-    /* Make radio label text white */
+
+    /* Make radio label text white + larger */
     [data-testid="stSidebar"] .stRadio > label, 
     [data-testid="stSidebar"] .stRadio div {
         color: white !important;
-        font: 28px !important;
+        font-size: 20px !important;
         font-weight: bold !important;
     }
 
@@ -56,12 +57,11 @@ try:
     st.sidebar.image("logo.png", width=150)  # Upload this file to repo root
 except Exception:
     st.sidebar.markdown("**Project Drishti**")
-st.sidebar.title("Navigation")
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Upload Excel/CSV", "Dashboard", "Student Attendance", "Student Marks", "Fees Status", "About"])
 
-# ========================= # Title # =========================
-#st.title("🏫 Project Drishti – Student Success Early Warning System")
-#st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+st.sidebar.title("Navigation")
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+    ["Upload Excel/CSV", "Dashboard", "Student Attendance", "Student Marks", "Fees Status", "About"]
+)
 
 # ========================= # Upload Page # =========================
 with tab1:
@@ -75,19 +75,17 @@ with tab1:
             else:
                 df = pd.read_csv(uploaded_file, index_col=False)
 
-           # Fully reset index and drop old index if present
+            # Fully reset index and drop old index if present
             df.reset_index(drop=True, inplace=True)
 
-            # Remove any unnamed columns that might have come from Excel/CSV index
+            # Remove any unnamed columns
             df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False, na=False)]
-
 
             st.session_state["data"] = df
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
             st.write("Here is a sample of your data:")
             st.dataframe(df.head())
             
-
         except Exception as e:
             st.error(f"Error reading file: {e}")
 
@@ -149,20 +147,33 @@ with tab2:
                 <div style="text-align: right;">🟢 Low Dropout Risk</div>
                 </div>
                 """, unsafe_allow_html=True)
+
                 risk_counts = df["Risk"].value_counts()
-                fig1, ax1 = plt.subplots()
-                colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
+                colors = {
+                    "High Risk": "#ff4b4b",   # red
+                    "Medium Risk": "#f5d90a", # yellow
+                    "Low Risk": "#90ee90"     # green
+                }
                 labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
                 sizes = risk_counts.values.tolist()
 
-                ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 10})
-                ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+                fig1, ax1 = plt.subplots()
+                ax1.pie(
+                    sizes,
+                    labels=labels,
+                    colors=[colors[r] for r in risk_counts.index],
+                    autopct='%1.1f%%',
+                    startangle=90,
+                    textprops={'fontsize': 10}
+                )
+                ax1.axis("equal")
                 st.pyplot(fig1)
             
-             # === Sorted Risk Table (Scrollable, 5 rows visible) ===
+            # === Sorted Risk Table (Scrollable, 5 rows visible) ===
             with col2:
-                st.markdown('<h3 style="color: red; font-weight: bold; font-size: 28px;font-family: Georgia, serif;">Students Sorted by Risk Level</h3>',
-                unsafe_allow_html=True
+                st.markdown(
+                    '<h3 style="color: red; font-weight: bold; font-size: 28px;font-family: Georgia, serif;">Students Sorted by Risk Level</h3>',
+                    unsafe_allow_html=True
                 )
 
                 risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
@@ -171,12 +182,11 @@ with tab2:
                 sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
                 sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
 
-            # Show as scrollable dataframe with ~5 rows visible
                 row_height = 35  # px per row approx
                 visible_rows = 5
                 table_height = row_height * (visible_rows + 1)  # +1 for header
                 sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
-                st.dataframe(sorted_df, height=table_height, hide_index=True)
+                st.dataframe(sorted_df, height=table_height, hide_index=True, use_container_width=True)
 
 # ========================= # Attendance Page # =========================
 with tab3:
@@ -204,7 +214,7 @@ with tab5:
             # Color coding function
             def highlight_fees(val):
                 if val == 0:
-                    return "background-color: lightgreen; color: black;"
+                    return "background-color: lightgreen; color: white;"
                 else:
                     return "background-color: red; color: white;"
 
@@ -222,7 +232,6 @@ with tab4:
             st.header("📊 Student Marks Overview")
             st.line_chart(df.set_index("StudentID")["Marks"])
 
-
 # ========================= # About Page # =========================
 with tab6:
     st.header("ℹ️ About Project Drishti")
@@ -230,7 +239,7 @@ with tab6:
     **Drishti** is an early warning system for schools/colleges. It unifies student data and shows real-time **Student at Risk (StAR) scores**. 
     ### Features
     - **High Risk** students = 🔴 Red
-    - **Medium Risk** students = 🟠 Orange
+    - **Medium Risk** students = 🟡 Yellow
     - **Low Risk** students = 🟢 Green
     - Upload Excel/CSV files directly
     - Easy, intuitive portal look
