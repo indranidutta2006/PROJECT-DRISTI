@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
-import firebase_admin
-from firebase_admin import credentials, db 
 
 # ========================= # Page Config # =========================
 st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_state="collapsed")
@@ -12,55 +9,32 @@ st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_
 # ========================= # Custom Theme Styling # =========================
 st.markdown("""
     <style>
-    /* Whole page background */
-    .reportview-container {
-        background-color: #ffffff;
-    }
-
-    /* Sidebar */
     [data-testid="stSidebar"] {
-        background-color: #aa5ee0; /* Purple */
+        background-color: #aa5ee0; 
         color: white;
     }
-
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3,
     [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
         color: white !important;
     }
-
-    /* Make radio label text white + larger */
     [data-testid="stSidebar"] .stRadio > label, 
     [data-testid="stSidebar"] .stRadio div {
         color: white !important;
         font-size: 20px !important;
         font-weight: bold !important;
     }
-
-    [data-testid="stSidebar"] .stRadio span {
-        color: white !important;
-    }
-
-    /* Main headers */
-    h1, h2, h3 {
-        color: #fcfcfc;
-    }
-
-    /* Dataframe table font */
-    .stDataFrame {
-        font-size: 20px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ========================= # Sidebar with Logo # =========================
 try:
-    st.sidebar.image("logo.png", width=150)  # Upload this file to repo root
+    st.sidebar.image("logo.png", width=150)
 except Exception:
     st.sidebar.markdown("**Project Drishti**")
 
 st.sidebar.title("Navigation")
-tab1, tab2, tab3, tab4, tab5, tab6,tab7 = st.tabs(
-    ["Upload Excel/CSV", "Dashboard", "Student Attendance", "Student Marks", "Fees Status", "Student Details", "About"]
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
+    ["Upload Excel/CSV", "Dashboard", "Attendance", "Marks", "Assignments", "Fees Status", "Student Details", "About"]
 )
 
 # ========================= # Upload Page # =========================
@@ -75,17 +49,24 @@ with tab1:
             else:
                 df = pd.read_csv(uploaded_file, index_col=False)
 
-            # Fully reset index and drop old index if present
             df.reset_index(drop=True, inplace=True)
-
-            # Remove any unnamed columns
             df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False, na=False)]
 
-            st.session_state["data"] = df
-            st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
-            st.write("Here is a sample of your data:")
-            st.dataframe(df.head())
-            
+            # ✅ New required columns
+            required_cols = [
+                "StudentID", "Attendance", "LastSemMarks", "CurrentSemMarks",
+                "BacklogAssignments", "AssignmentSubmission", "FeesDue"
+            ]
+            missing = [c for c in required_cols if c not in df.columns]
+
+            if missing:
+                st.error(f"Missing columns: {missing}. Please upload correct file.")
+            else:
+                st.session_state["data"] = df
+                st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
+                st.write("Here is a sample of your data:")
+                st.dataframe(df.head())
+
         except Exception as e:
             st.error(f"Error reading file: {e}")
 
@@ -95,205 +76,113 @@ with tab2:
     st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
 
     if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first from the Upload Excel/CSV tab.")
+        st.warning("⚠️ Please upload student data first.")
     else:
         df = st.session_state["data"].copy()
 
-        required_cols = ["StudentID", "Attendance", "Marks", "FeesDue"]
-        missing = [c for c in required_cols if c not in df.columns]
-        if missing:
-            st.error(f"Missing columns: {missing}. Please upload correct file.")
-        else:
-            # === Risk Score Calculation ===
-            df["FeesDeduction"] = df["FeesDue"] * 20
-            df["RiskScore"] = 100 - (0.4*df["Attendance"] + 0.4*df["Marks"] + df["FeesDeduction"])
-            df["RiskScore"] = df["RiskScore"].clip(lower=0).round(1)
+        # === Risk Score Calculation ===
+        df["AvgMarks"] = (df["LastSemMarks"] + df["CurrentSemMarks"]) / 2
+        df["FeesPenalty"] = df["FeesDue"] * 20
+        df["RiskScore"] = 100 - (
+            0.3 * df["Attendance"] +
+            0.3 * df["AvgMarks"] +
+            0.2 * df["AssignmentSubmission"] -
+            5 * df["BacklogAssignments"] +
+            df["FeesPenalty"]
+        )
+        df["RiskScore"] = df["RiskScore"].clip(lower=0).round(1)
 
-            # === Assign Risk Levels ===
-            def risk_level(score):
-                if score >= 75:
-                    return "High Risk"
-                elif score >= 50:
-                    return "Medium Risk"
-                else:
-                    return "Low Risk"
+        def risk_level(score):
+            if score >= 75:
+                return "High Risk"
+            elif score >= 50:
+                return "Medium Risk"
+            else:
+                return "Low Risk"
 
-            df["Risk"] = df["RiskScore"].apply(risk_level)
+        df["Risk"] = df["RiskScore"].apply(risk_level)
 
-            # === Color-coded Dataframe ===
-            def highlight_risk(val):
-                if val == "High Risk":
-                    return "background-color: red; color: white;"
-                elif val == "Medium Risk":
-                    return "background-color: yellow; color: black;"
-                elif val == "Low Risk":
-                    return "background-color: lightgreen; color: black;"
-                return ""
+        st.subheader("📋 Student Risk Scores")
+        df_display = df.copy()
+        df_display.insert(0, "Sl No", range(1, len(df_display) + 1))
 
-            st.subheader("📋 Student Risk Scores")
-            df_display = df.copy()
-            df_display.insert(0, "Sl No", range(1, len(df_display) + 1))
-            st.dataframe(df_display.style.applymap(highlight_risk, subset=["Risk"]), hide_index=True)
+        def highlight_risk(val):
+            if val == "High Risk":
+                return "background-color: red; color: white;"
+            elif val == "Medium Risk":
+                return "background-color: yellow; color: black;"
+            else:
+                return "background-color: lightgreen; color: black;"
 
-            # === Risk Distribution Pie Chart ===
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                st.subheader("Student Dropout Risk")
-                st.markdown("### Risk Level Color Codes")
-                st.markdown("""
-                <div style="display: flex; justify-content: space-between; font-size: 18px;">
-                <div style="text-align: left;">🔴 High Dropout Risk</div>
-                <div style="text-align: center;">🟡 Medium Dropout Risk</div>
-                <div style="text-align: right;">🟢 Low Dropout Risk</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                risk_counts = df["Risk"].value_counts()
-                colors = {
-                    "High Risk": "#ff4b4b",   # red
-                    "Medium Risk": "#f5d90a", # yellow
-                    "Low Risk": "#90ee90"     # green
-                }
-                labels = [f"{risk} ({count})" for risk, count in risk_counts.items()]
-                sizes = risk_counts.values.tolist()
-
-                fig1, ax1 = plt.subplots()
-                ax1.pie(
-                    sizes,
-                    labels=labels,
-                    colors=[colors[r] for r in risk_counts.index],
-                    autopct='%1.1f%%',
-                    startangle=90,
-                    textprops={'fontsize': 10}
-                )
-                ax1.axis("equal")
-                st.pyplot(fig1)
-            
-            # === Sorted Risk Table (Scrollable, 5 rows visible) ===
-            with col2:
-                st.markdown(
-                    '<h3 style="color: red; font-weight: bold; font-size: 28px;font-family: Georgia, serif;">Students Sorted by Risk Level</h3>',
-                    unsafe_allow_html=True
-                )
-
-                risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
-                sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
-                sorted_df["RiskOrder"] = sorted_df["Risk"].map(risk_order)
-                sorted_df = sorted_df.sort_values(by=["RiskOrder", "RiskScore"], ascending=[True, False])
-                sorted_df = sorted_df.drop(columns="RiskOrder").reset_index(drop=True)
-
-                row_height = 35  # px per row approx
-                visible_rows = 5
-                table_height = row_height * (visible_rows + 1)  # +1 for header
-                sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
-                st.dataframe(sorted_df, height=table_height, hide_index=True, use_container_width=True)
+        st.dataframe(df_display.style.applymap(highlight_risk, subset=["Risk"]), hide_index=True)
 
 # ========================= # Attendance Page # =========================
 with tab3:
-    if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first.")
-    else:
+    if "data" in st.session_state:
         df = st.session_state["data"].copy()
-        if "Attendance" not in df.columns:
-            st.error("Attendance column missing in uploaded file.")
-        else:
-            st.header("📅 Student Attendance Overview")
-            st.bar_chart(df.set_index("StudentID")["Attendance"])
-
-# ========================= # Fees Status Page # =========================
-with tab5:
-    if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first.")
-    else:
-        df = st.session_state["data"].copy()
-        if "FeesDue" not in df.columns:
-            st.error("FeesDue column missing in uploaded file.")
-        else:
-            st.header("💰 Student Fees Status")
-
-            # Color coding function
-            def highlight_fees(val):
-                if val == 0:
-                    return "background-color: lightgreen; color: white;"
-                else:
-                    return "background-color: red; color: white;"
-
-            st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
+        st.header("📅 Attendance Overview")
+        st.bar_chart(df.set_index("StudentID")["Attendance"])
 
 # ========================= # Marks Page # =========================
 with tab4:
-    if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first.")
-    else:
+    if "data" in st.session_state:
         df = st.session_state["data"].copy()
-        if "Marks" not in df.columns:
-            st.error("Marks column missing in uploaded file.")
-        else:
-            st.header("📊 Student Marks Overview")
-            st.line_chart(df.set_index("StudentID")["Marks"])
+        st.header("📊 Marks Overview")
+        st.line_chart(df.set_index("StudentID")[["LastSemMarks", "CurrentSemMarks"]])
+
+# ========================= # Assignments Page # =========================
+with tab5:
+    if "data" in st.session_state:
+        df = st.session_state["data"].copy()
+        st.header("📝 Assignments Overview")
+        st.dataframe(df[["StudentID", "BacklogAssignments", "AssignmentSubmission"]])
+
+# ========================= # Fees Status Page # =========================
+with tab6:
+    if "data" in st.session_state:
+        df = st.session_state["data"].copy()
+        st.header("💰 Student Fees Status")
+
+        def highlight_fees(val):
+            return "background-color: red; color: white;" if val == 1 else "background-color: lightgreen; color: white;"
+
+        st.dataframe(df[["StudentID", "FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details Page # =========================
-with tab6:  # shifted About to tab7
-    if "data" not in st.session_state:
-        st.warning("⚠️ Please upload student data first.")
-    else:
+with tab7:
+    if "data" in st.session_state:
         df = st.session_state["data"].copy()
-        required_cols = ["StudentID", "Attendance", "Marks", "FeesDue"]
-        missing = [c for c in required_cols if c not in df.columns]
-        if missing:
-            st.error(f"Missing columns: {missing}. Please upload correct file.")
-        else:
-            # Ensure RiskScore & Risk are calculated
-            if "RiskScore" not in df.columns or "Risk" not in df.columns:
-                df["FeesDeduction"] = df["FeesDue"] * 20
-                df["RiskScore"] = 100 - (0.4*df["Attendance"] + 0.4*df["Marks"] + df["FeesDeduction"])
-                df["RiskScore"] = df["RiskScore"].clip(lower=0).round(1)
+        st.header("👤 Student Details")
+        student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
 
-                def risk_level(score):
-                    if score >= 75:
-                        return "High Risk"
-                    elif score >= 50:
-                        return "Medium Risk"
-                    else:
-                        return "Low Risk"
-                df["Risk"] = df["RiskScore"].apply(risk_level)
+        if student_id:
+            student = df[df["StudentID"] == student_id].iloc[0]
 
-            st.header("👤 Student Details")
+            if student["Risk"] == "High Risk":
+                risk_style = "background-color: red; color: white; padding:10px; border-radius:8px;"
+            elif student["Risk"] == "Medium Risk":
+                risk_style = "background-color: yellow; color: black; padding:10px; border-radius:8px;"
+            else:
+                risk_style = "background-color: lightgreen; color: black; padding:10px; border-radius:8px;"
 
-            student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
-
-            if student_id:
-                student = df[df["StudentID"] == student_id].iloc[0]
-
-                # Risk color
-                if student["Risk"] == "High Risk":
-                    risk_style = "background-color: red; color: white; padding:10px; border-radius:8px;"
-                elif student["Risk"] == "Medium Risk":
-                    risk_style = "background-color: yellow; color: black; padding:10px; border-radius:8px;"
-                else:
-                    risk_style = "background-color: lightgreen; color: black; padding:10px; border-radius:8px;"
-
-                st.markdown(f"""
-                <div style="font-size:20px;">
-                    <b>📌 Student ID:</b> {student['StudentID']}<br>
-                    <b>📅 Attendance:</b> {student['Attendance']}%<br>
-                    <b>📊 Marks:</b> {student['Marks']}<br>
-                    <b>💰 Fees Due:</b> {"✅ Paid" if student['FeesDue']==0 else "❌ Due ("+str(student['FeesDue'])+")"}<br><br>
-                    <div style="{risk_style}">
-                        <b>Dropout Risk:</b> {student['Risk']} (Score: {student['RiskScore']})
-                    </div>
+            st.markdown(f"""
+            <div style="font-size:20px;">
+                <b>📌 Student ID:</b> {student['StudentID']}<br>
+                <b>📅 Attendance:</b> {student['Attendance']}%<br>
+                <b>📊 Last Sem Marks:</b> {student['LastSemMarks']}<br>
+                <b>📊 Current Sem Marks:</b> {student['CurrentSemMarks']}<br>
+                <b>📝 Backlog Assignments:</b> {student['BacklogAssignments']}<br>
+                <b>📂 Assignment Submission:</b> {student['AssignmentSubmission']}%<br>
+                <b>💰 Fees Status:</b> {"✅ Paid" if student['FeesDue']==0 else "❌ Due"}<br><br>
+                <div style="{risk_style}">
+                    <b>Dropout Risk:</b> {student['Risk']} (Score: {student['RiskScore']})
                 </div>
-                """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
 # ========================= # About Page # =========================
-with tab7:
+with st.tabs(["About"])[0]:
     st.header("ℹ️ About Project Drishti")
     st.markdown("""
     **Drishti** is an early warning system for schools/colleges. It unifies student data and shows real-time **Student at Risk (StAR) scores**. 
-    ### Features
-    - **High Risk** students = 🔴 Red
-    - **Medium Risk** students = 🟡 Yellow
-    - **Low Risk** students = 🟢 Green
-    - Upload Excel/CSV files directly
-    - Easy, intuitive portal look
     """)
