@@ -151,7 +151,7 @@ with tab2:
             
              # === Sorted Risk Table (Scrollable, 5 rows visible) ===
             with col2:
-                st.markdown('<h3 style="color: orange; font-weight: bold; font-size: 28px;">Students Sorted by Risk Level</h3>',
+                st.markdown('<h3 style="color: red; font-weight: bold; font-size: 28px;font-family: Georgia, serif;">Students Sorted by Risk Level</h3>',
                 unsafe_allow_html=True
                 )
 
