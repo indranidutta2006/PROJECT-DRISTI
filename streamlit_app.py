@@ -125,6 +125,8 @@ with tab1:
             st.dataframe(df.style.applymap(highlight_risk, subset=["Risk"]))
 
             # === Risk Distribution Pie Chart ===
+            col1, col2 = st.columns([1, 1])
+            with col1:
             st.subheader("Student Dropout Risk")
             st.markdown("### Risk Level Color Codes")
             st.markdown("""
@@ -145,6 +147,7 @@ with tab1:
             st.pyplot(fig1)
             
              # === Sorted Risk Table (Scrollable, 5 rows visible) ===
+            with col2:
             st.subheader("Students Sorted by Risk Level")
 
             risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
