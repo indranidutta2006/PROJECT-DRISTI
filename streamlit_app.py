@@ -57,7 +57,7 @@ try:
 except Exception:
     st.sidebar.markdown("**Project Drishti**")
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Dashboard", "Upload Excel/CSV", "Student Attendance", "Student Marks", "Fees Status", "About"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Dashboard", "Upload Excel/CSV", "Student Attendance", "Student Marks", "Fees Status", "About"])
 
 # ========================= # Title # =========================
 st.title("🏫 Project Drishti – Student Success Early Warning System")
