@@ -128,8 +128,12 @@ with tab1:
             st.subheader("Student Dropout Risk")
             st.markdown("### Risk Level Color Codes")
             st.markdown("""
-            - 🔴High Dropout Risk                  🟡Medium Dropout Risk                     🟢Low Dropout Risk
-            """)
+            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
+            <div style="text-align: left;">🔴 High Dropout Risk</div>
+            <div style="text-align: center;">🟡 Medium Dropout Risk</div>
+            <div style="text-align: right;">🟢 Low Dropout Risk</div>
+            </div>
+            """, unsafe_allow_html=True)
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
             colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
