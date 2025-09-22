@@ -31,7 +31,8 @@ st.markdown("""
     [data-testid="stSidebar"] .stRadio > label, 
     [data-testid="stSidebar"] .stRadio div {
         color: white !important;
-        font: 24px !important 
+        font: 28px !important;
+        font-weight: bold !important;
     }
 
     [data-testid="stSidebar"] .stRadio span {
