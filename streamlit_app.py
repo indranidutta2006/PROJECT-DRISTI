@@ -44,7 +44,7 @@ st.markdown("""
 
     /* Dataframe table font */
     .stDataFrame {
-        font-size: 14px;
+        font-size: 20px;
     }
     </style>
 """, unsafe_allow_html=True)
