@@ -151,7 +151,9 @@ with tab2:
             
              # === Sorted Risk Table (Scrollable, 5 rows visible) ===
             with col2:
-                st.subheader("Students Sorted by Risk Level")
+                st.subheader('<h3 style="color: orange; font-weight: bold; font-size: 28px;">Students Sorted by Risk Level</h3>',
+                unsafe_allow_html=True
+                )
 
                 risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
                 sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
