@@ -7,7 +7,7 @@ import firebase_admin
 from firebase_admin import credentials, db 
 
 # ========================= # Page Config # =========================
-st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_state="hidden")
+st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_state="collapsed")
 
 # ========================= # Custom Theme Styling # =========================
 st.markdown("""
