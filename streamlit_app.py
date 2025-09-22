@@ -75,9 +75,12 @@ with tab1:
             else:
                 df = pd.read_csv(uploaded_file, index_col=False)
 
-           # Remove old index and unnamed columns
-            df = df.reset_index(drop=True)
-            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+           # Fully reset index and drop old index if present
+            df.reset_index(drop=True, inplace=True)
+
+            # Remove any unnamed columns that might have come from Excel/CSV index
+            df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False, na=False)]
+
 
             st.session_state["data"] = df
             st.success(f"✅ Loaded file with {df.shape[0]} rows and {df.shape[1]} columns.")
