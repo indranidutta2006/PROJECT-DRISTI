@@ -123,7 +123,7 @@ elif page == "Dashboard":
             st.dataframe(df.style.applymap(highlight_risk, subset=["Risk"]))
 
             # === Risk Distribution Pie Chart ===
-            st.subheader("Risk Distribution (Pie Chart)")
+            st.subheader("Student Dropout Risk")
             risk_counts = df["Risk"].value_counts()
             fig1, ax1 = plt.subplots()
             colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # red, yellow, lightgreen
@@ -135,7 +135,7 @@ elif page == "Dashboard":
             st.pyplot(fig1)
             
              # === Sorted Risk Table (Scrollable, 5 rows visible) ===
-            st.subheader("📊 Students Sorted by Risk Level")
+            st.subheader("Students Sorted by Risk Level")
 
             risk_order = {"High Risk": 0, "Medium Risk": 1, "Low Risk": 2}
             sorted_df = df[["StudentID", "Risk", "RiskScore"]].copy()
