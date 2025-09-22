@@ -64,7 +64,7 @@ st.title("🏫 Project Drishti – Student Success Early Warning System")
 st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
 
 # ========================= # Upload Page # =========================
-if page == "Upload Excel/CSV":
+if tab2 == "Upload Excel/CSV":
     st.header("Upload Student Data")
     uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["xlsx","xls","csv"])
 
@@ -84,7 +84,7 @@ if page == "Upload Excel/CSV":
             st.error(f"Error reading file: {e}")
 
 # ========================= # Dashboard Page # =========================
-elif page == "Dashboard":
+elif tab1 == "Dashboard":
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first from the sidebar.")
     else:
