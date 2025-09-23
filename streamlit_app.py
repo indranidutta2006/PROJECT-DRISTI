@@ -87,23 +87,23 @@ def calculate_risk_scores(df):
     risk_labels = []
 
     for _, row in df.iterrows():
-        # Weighted formula
-        student_score = 100 - (
-            0.3 * row["Attendance"]
-            + 0.3 * ((row["LastSemMarks"] + row["CurrentSemMarks"]) / 2)
-            + 0.2 * row["AssignmentSubmission"]
-            - row["BacklogAssignments"] * 5
-            - row["FeesDue"] * 20
+        # New StAR Score formula
+        star_score = round(
+            ((100 - row["Attendance"]) * 0.6)
+            + (max(0, row["LastSemMarks"] - row["CurrentSemMarks"]) * 0.8)
+            + (row["BacklogAssignments"] * 15)
+            + ((100 - row["AssignmentSubmission"]) * 0.3)
+            + (10 if row["FeesDue"] == 1 else 0)
         )
 
         # Ensure score always between 1 and 100
-        student_score = np.clip(round(student_score, 1), 1, 100)
-        star_scores.append(student_score)
+        star_score = np.clip(star_score, 1, 100)
+        star_scores.append(star_score)
 
         # Risk label mapping
-        if student_score >= 75:
+        if star_score >= 75:
             risk = "High Risk"
-        elif student_score >= 50:
+        elif star_score >= 50:
             risk = "Medium Risk"
         else:
             risk = "Low Risk"
@@ -112,7 +112,6 @@ def calculate_risk_scores(df):
     df["StARScore"] = star_scores
     df["Risk"] = risk_labels
     return df
-
 # ========================= # Dashboard =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
