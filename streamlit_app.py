@@ -2,12 +2,31 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 # ========================= # Page Config # =========================
 st.set_page_config(page_title="Project Drishti", layout="wide")
 
 # ========================= # Custom Theme Styling # =========================
-st.image("assets/team_banner.png", use_container_width=True, width=600, height=200)
+IMG_PATH = "assets/team_banner.png"
+
+# Load image using PIL
+try:
+    image = Image.open(IMG_PATH)
+    # Optional: resize proportionally
+    max_width = 800  # max width in pixels
+    aspect_ratio = image.height / image.width
+    new_height = int(max_width * aspect_ratio)
+    image = image.resize((max_width, new_height))
+    
+    # Display centered image
+    st.image(image, use_column_width=False)
+except FileNotFoundError:
+    # Fallback if image is missing
+    st.markdown(
+        "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
+        unsafe_allow_html=True
+    )
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
