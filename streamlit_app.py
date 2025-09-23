@@ -83,7 +83,7 @@ with tab1:
 
 # ========================= # Risk Score Function =========================
 def calculate_risk_scores(df):
-    risk_scores = []
+    star_scores = []
     risk_labels = []
 
     for _, row in df.iterrows():
@@ -98,7 +98,7 @@ def calculate_risk_scores(df):
 
         # Ensure score always between 1 and 100
         student_score = np.clip(round(student_score, 1), 1, 100)
-        risk_scores.append(student_score)
+        star_scores.append(student_score)
 
         # Risk label mapping
         if student_score >= 75:
@@ -109,9 +109,10 @@ def calculate_risk_scores(df):
             risk = "Low Risk"
         risk_labels.append(risk)
 
-    df["RiskScore"] = risk_scores
+    df["StARScore"] = star_scores
     df["Risk"] = risk_labels
     return df
+
 # ========================= # Dashboard =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
@@ -121,7 +122,7 @@ with tab2:
         st.warning("⚠️ Please upload student data first.")
     else:
         df = calculate_risk_scores(st.session_state["data"])
-        st.subheader("📋 Student Risk Scores")
+        st.subheader("📋 Student StAR Scores")
         df_display = df.copy()
         df_display.insert(0, "Sl No", range(1, len(df_display) + 1))
 
@@ -153,10 +154,11 @@ with tab2:
         with col2:
             st.markdown(
                 '<h3 style="color:red;font-weight:bold;font-size:24px;font-family:Georgia, serif;">'
-                'Students Sorted by Risk Level</h3>', unsafe_allow_html=True)
-            sorted_df = df.sort_values(by=["RiskScore"], ascending=False).reset_index(drop=True)
+                'Students Sorted by StAR Score</h3>', unsafe_allow_html=True)
+            sorted_df = df.sort_values(by=["StARScore"], ascending=False).reset_index(drop=True)
             sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
             st.dataframe(sorted_df, height=210, hide_index=True)
+
 # ========================= # Attendance =========================
 with tab3:
     st.header("📅 Attendance Overview")
@@ -196,7 +198,6 @@ with tab6:
         st.dataframe(df[["StudentID","FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details =========================
-# ========================= # Student Details =========================
 with tab7:
     st.header("🔍 Individual Student Overview")
     if "data" not in st.session_state:
@@ -213,11 +214,11 @@ with tab7:
         st.write(f"**Assignments Submitted:** {student['AssignmentSubmission']}%")
         st.write(f"**Fees Due:** {'Yes' if student['FeesDue'] == 1 else 'No'}")
 
-        # Risk Score (already calculated in calculate_risk_scores)
-        student_score = student["RiskScore"]
+        # StAR Score (already calculated in calculate_risk_scores)
+        star_score = student["StARScore"]
         risk = student["Risk"]
 
-        st.write(f"**Risk Score:** {student_score}")
+        st.write(f"**StAR Score:** {star_score}")
 
         st.markdown(
             f"**Dropout Risk:** <span style='color:{'red' if risk=='High Risk' else 'orange' if risk=='Medium Risk' else 'green'}; font-weight:bold'>{risk}</span>",
