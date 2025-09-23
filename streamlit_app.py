@@ -15,9 +15,10 @@ IMG_PATH = "assets/team_banner.png"
 def display_banner():
     try:
         image = Image.open(IMG_PATH)
-        max_width = 1000  # max width in pixels for large screens
+        max_width = 100
         aspect_ratio = image.height / image.width
-        image = image.resize((int(max_width), int(max_width * aspect_ratio)))
+        new_height = int(max_width * aspect_ratio)
+        image = image.resize((max_width, new_height))
 
         buffered = BytesIO()
         image.save(buffered, format="PNG")
@@ -25,8 +26,8 @@ def display_banner():
 
         st.markdown(
             f"""
-            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-                <img src="data:image/png;base64,{img_str}" style="max-width: 100%; height: auto; margin-right: 15px;">
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <img src="data:image/png;base64,{img_str}" width="{max_width}" height="{new_height}" style="margin-right: 15px;">
                 <h2 style="color: #2E86C1; margin: 0;">TEAM SANKET</h2>
             </div>
             """,
@@ -37,7 +38,9 @@ def display_banner():
             "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
             unsafe_allow_html=True
         )
+
 display_banner()
+
 
 # ========================= # Sidebar =========================
 #st.sidebar.title("Navigation")
