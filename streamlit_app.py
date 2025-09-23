@@ -15,8 +15,8 @@ st.markdown("""
     }
     </style>
     <div style="text-align: center;">
-        <img src="team_banner.png" width="400">
-        <h2 style="margin-top: -10px; color: #2E86C1;">Team Visionaries</h2>
+        <img src="C:\Users\Indrani\Downloads\team_banner.png" width="400">
+        <h2 style="margin-top: -10px; color: #2E86C1;">TEAM SANKET</h2>
     </div>
 """, unsafe_allow_html=True)
 
