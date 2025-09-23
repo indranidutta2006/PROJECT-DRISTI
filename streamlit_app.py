@@ -10,23 +10,24 @@ st.set_page_config(page_title="Project Drishti", layout="wide")
 IMG_PATH = "assets/team_banner.png"
 
 try:
+    # Load and resize image
     image = Image.open(IMG_PATH)
-    # Resize to smaller width, keeping aspect ratio
     max_width = 400
     aspect_ratio = image.height / image.width
     new_height = int(max_width * aspect_ratio)
     image = image.resize((max_width, new_height))
 
-    # Center the image using Markdown
-    st.markdown(
-        f"<div style='text-align: center;'><img src='assets/team_banner.png' width='{max_width}' height='{new_height}'></div>",
-        unsafe_allow_html=True
-    )
+    # Display the image centered using st.image inside a container
+    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+    st.image(image, use_column_width=False)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 except FileNotFoundError:
     st.markdown(
         "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
         unsafe_allow_html=True
     )
+
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
