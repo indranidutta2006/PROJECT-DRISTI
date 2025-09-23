@@ -44,7 +44,7 @@ def display_banner():
 
 # Call the banner at the top of the app
 display_banner()
-    </style>
+ #   </style>
     <div style="text-align: center;">
         <h2 style="margin-top: -10px; color: #2E86C1;">TEAM SANKET</h2>
     </div>
