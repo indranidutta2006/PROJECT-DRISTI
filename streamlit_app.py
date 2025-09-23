@@ -81,12 +81,13 @@ with tab1:
             st.error(f"Error reading file: {e}")
 
 # ========================= # Risk Score Function =========================
+# ========================= # Risk Score Function =========================
 def calculate_risk_scores(df):
     risk_scores = []
     risk_labels = []
 
     for _, row in df.iterrows():
-        # New weighted risk formula
+        # Weighted formula
         student_score = 100 - (
             0.3 * row["Attendance"]
             + 0.3 * ((row["LastSemMarks"] + row["CurrentSemMarks"]) / 2)
@@ -95,7 +96,8 @@ def calculate_risk_scores(df):
             - row["FeesDue"] * 20
         )
 
-        student_score = max(0, round(student_score, 1))
+        # Ensure score always between 1 and 100
+        student_score = np.clip(round(student_score, 1), 1, 100)
         risk_scores.append(student_score)
 
         # Risk label mapping
@@ -110,7 +112,6 @@ def calculate_risk_scores(df):
     df["RiskScore"] = risk_scores
     df["Risk"] = risk_labels
     return df
-
 # ========================= # Dashboard =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
