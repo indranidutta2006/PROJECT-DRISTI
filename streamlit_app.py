@@ -12,22 +12,32 @@ IMG_PATH = "assets/team_banner.png"
 try:
     # Load and resize image
     image = Image.open(IMG_PATH)
-    max_width = 200
+    max_width = 100  # adjust width
     aspect_ratio = image.height / image.width
     new_height = int(max_width * aspect_ratio)
     image = image.resize((max_width, new_height))
 
-    # Display the image centered using st.image inside a container
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.image(image, use_container_width=False)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Convert to base64
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+
+    # Display image and text on the same line
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <img src="data:image/png;base64,{img_str}" width="{max_width}" height="{new_height}" style="margin-right: 15px;">
+            <h2 style="color: #2E86C1; margin: 0;">TEAM SANKET</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 except FileNotFoundError:
     st.markdown(
         "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
         unsafe_allow_html=True
     )
-
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
