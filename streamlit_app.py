@@ -7,22 +7,29 @@ from PIL import Image
 # ========================= # Page Config # =========================
 st.set_page_config(page_title="Project Drishti", layout="wide")
 
-# ========================= # Custom Theme Styling # =========================
+# Path to the image in assets folder
 IMG_PATH = "assets/team_banner.png"
 
-# Load image using PIL
 try:
+    # Load the image
     image = Image.open(IMG_PATH)
-    # Optional: resize proportionally
-    max_width = 800  # max width in pixels
+    
+    # Resize proportionally to a smaller width (e.g., 400px)
+    max_width = 400
     aspect_ratio = image.height / image.width
     new_height = int(max_width * aspect_ratio)
     image = image.resize((max_width, new_height))
     
-    # Display centered image
-    st.image(image, use_column_width=False)
+    # Display image using HTML to center it
+    st.markdown(
+        f"""
+        <div style='text-align: center; margin-bottom: 10px;'>
+            <img src="data:image/png;base64,{st.image(image, use_column_width=False)}" width="{max_width}" height="{new_height}">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 except FileNotFoundError:
-    # Fallback if image is missing
     st.markdown(
         "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
         unsafe_allow_html=True
