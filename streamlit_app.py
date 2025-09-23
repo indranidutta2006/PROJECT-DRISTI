@@ -4,24 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ========================= # Page Config # =========================
-st.set_page_config(page_title="Project Drishti", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Project Drishti", layout="wide")
 
 # ========================= # Custom Theme Styling # =========================
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
-        background-color: #aa5ee0; 
-        color: white;
-    }
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
-        color: white !important;
-    }
-    [data-testid="stSidebar"] .stRadio > label, 
-    [data-testid="stSidebar"] .stRadio div {
-        color: white !important;
-        font-size: 20px !important;
-        font-weight: bold !important;
+        display: none;
+    
     }
     </style>
 """, unsafe_allow_html=True)
