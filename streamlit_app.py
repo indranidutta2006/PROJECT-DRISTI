@@ -86,27 +86,25 @@ def calculate_risk_scores(df):
     risk_labels = []
 
     for _, row in df.iterrows():
-        score = 0
-        # Attendance
-        if row["Attendance"] < 60: score += 2
-        elif row["Attendance"] < 75: score += 1
-        # Marks
-        avg_marks = (row["LastSemMarks"] + row["CurrentSemMarks"]) / 2
-        if avg_marks < 40: score += 2
-        elif avg_marks < 50: score += 1
-        # Assignments
-        if row["BacklogAssignments"] > 3: score += 2
-        elif row["BacklogAssignments"] > 0: score += 1
-        if row["AssignmentSubmission"] < 50: score += 2
-        elif row["AssignmentSubmission"] < 75: score += 1
-        # Fees
-        if row["FeesDue"] == 1: score += 2
-        # Risk Label
-        if score >= 6: risk = "High Risk"
-        elif score >= 3: risk = "Medium Risk"
-        else: risk = "Low Risk"
+        # New weighted risk formula
+        student_score = 100 - (
+            0.3 * row["Attendance"]
+            + 0.3 * ((row["LastSemMarks"] + row["CurrentSemMarks"]) / 2)
+            + 0.2 * row["AssignmentSubmission"]
+            - row["BacklogAssignments"] * 5
+            - row["FeesDue"] * 20
+        )
 
-        risk_scores.append(score)
+        student_score = max(0, round(student_score, 1))
+        risk_scores.append(student_score)
+
+        # Risk label mapping
+        if student_score >= 75:
+            risk = "High Risk"
+        elif student_score >= 50:
+            risk = "Medium Risk"
+        else:
+            risk = "Low Risk"
         risk_labels.append(risk)
 
     df["RiskScore"] = risk_scores
@@ -134,14 +132,20 @@ with tab2:
 
         st.dataframe(df_display.style.applymap(highlight_risk, subset=["Risk"]), hide_index=True)
 
-        col1, col2 = st.columns([1,1])
+        col1, col2 = st.columns([1, 1])
         with col1:
             st.subheader("Student Dropout Risk Distribution")
             risk_counts = df["Risk"].value_counts()
             fig, ax = plt.subplots()
-            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # High, Medium, Low
-            ax.pie(risk_counts.values, labels=[f"{r} ({c})" for r,c in zip(risk_counts.index,risk_counts.values)],
-                   colors=colors, autopct='%1.1f%%', startangle=90, textprops={'fontsize':10})
+            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # Low, Medium, High
+            ax.pie(
+                risk_counts.values,
+                labels=[f"{r} ({c})" for r, c in zip(risk_counts.index, risk_counts.values)],
+                colors=colors,
+                autopct='%1.1f%%',
+                startangle=90,
+                textprops={'fontsize': 10}
+            )
             ax.axis('equal')
             st.pyplot(fig)
 
@@ -150,9 +154,8 @@ with tab2:
                 '<h3 style="color:red;font-weight:bold;font-size:24px;font-family:Georgia, serif;">'
                 'Students Sorted by Risk Level</h3>', unsafe_allow_html=True)
             sorted_df = df.sort_values(by=["RiskScore"], ascending=False).reset_index(drop=True)
-            sorted_df.insert(0, "Sl No", range(1,len(sorted_df)+1))
+            sorted_df.insert(0, "Sl No", range(1, len(sorted_df) + 1))
             st.dataframe(sorted_df, height=210, hide_index=True)
-
 # ========================= # Attendance =========================
 with tab3:
     st.header("📅 Attendance Overview")
