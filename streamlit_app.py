@@ -12,7 +12,7 @@ IMG_PATH = "assets/team_banner.png"
 try:
     # Load and resize image
     image = Image.open(IMG_PATH)
-    max_width = 400
+    max_width = 200
     aspect_ratio = image.height / image.width
     new_height = int(max_width * aspect_ratio)
     image = image.resize((max_width, new_height))
