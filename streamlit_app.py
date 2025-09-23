@@ -18,7 +18,7 @@ st.markdown("""
         <h2 style="margin-top: -10px; color: #2E86C1;">TEAM SANKET</h2>
     </div>
 """, unsafe_allow_html=True)
-#st.image("team_banner.png", use_column_width=True)
+st.image("https://photos.app.goo.gl/ttnMHxKq3dmqADvt9", use_column_width=True)
 
 # ========================= # Sidebar with Logo # =========================
 #try:
