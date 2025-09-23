@@ -17,10 +17,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ========================= # Sidebar with Logo # =========================
-try:
-    st.sidebar.image("logo.png", width=150)
-except Exception:
-    st.sidebar.markdown("**Project Drishti**")
+#try:
+    #st.sidebar.image("logo.png", width=150)
+#except Exception:
+    #st.sidebar.markdown("**Project Drishti**")
 
 st.sidebar.title("Navigation")
 tab1, tab2, tab3, tab4, tab5, tab6, tab7,tab8 = st.tabs(
