@@ -28,14 +28,14 @@ def display_banner():
             f"""
             <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                 <img src="data:image/png;base64,{img_str}" width="{max_width}" height="{new_height}" style="margin-right: 15px;">
-                <h2 style="color: #2E86C1; margin: 0;font-family:Georgia, serif;">TEAM SANKET</h2>
+                <h2 style="color: #0a3a5e; margin: 0;font-family:Georgia, serif;">TEAM SANKET</h2>
             </div>
             """,
             unsafe_allow_html=True
         )
     except FileNotFoundError:
         st.markdown(
-            "<h2 style='text-align: center; color: #2E86C1;font-family:Georgia, serif;'>TEAM SANKET</h2>",
+            "<h2 style='text-align: center; color: #0a3a5e;font-family:Georgia, serif;'>TEAM SANKET</h2>",
             unsafe_allow_html=True
         )
 
