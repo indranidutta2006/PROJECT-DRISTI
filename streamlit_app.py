@@ -198,7 +198,12 @@ with tab4:
 
 # ========================= # Assignments Page # =========================
 with tab5:
-    if "data" in st.session_state:
+    st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
         df = st.session_state["data"].copy()
         st.header("📝 Assignments Overview")
         st.dataframe(df[["StudentID", "BacklogAssignments", "AssignmentSubmission"]])
@@ -221,6 +226,9 @@ with tab6:
 
 # ========================= # Student Details Page # =========================
 with tab7:  # Student Tab
+    st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
