@@ -101,9 +101,9 @@ def calculate_risk_scores(df):
         risk_scores.append(student_score)
 
         # Risk label mapping
-        if student_score >= 50:
+        if student_score >= 75:
             risk = "High Risk"
-        elif student_score >= 25:
+        elif student_score >= 50:
             risk = "Medium Risk"
         else:
             risk = "Low Risk"
