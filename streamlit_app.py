@@ -80,7 +80,7 @@ with tab1:
         except Exception as e:
             st.error(f"Error reading file: {e}")
 
-# ========================= # Risk Score Function =========================
+
 # ========================= # Risk Score Function =========================
 def calculate_risk_scores(df):
     risk_scores = []
@@ -101,9 +101,9 @@ def calculate_risk_scores(df):
         risk_scores.append(student_score)
 
         # Risk label mapping
-        if student_score >= 75:
+        if student_score >= 50:
             risk = "High Risk"
-        elif student_score >= 50:
+        elif student_score >= 25:
             risk = "Medium Risk"
         else:
             risk = "Low Risk"
