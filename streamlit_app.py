@@ -28,14 +28,14 @@ def display_banner():
             f"""
             <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                 <img src="data:image/png;base64,{img_str}" width="{max_width}" height="{new_height}" style="margin-right: 15px;">
-                <h2 style="color: #0a3a5e; margin: 0;font-family:Georgia, serif;">TEAM SANKET</h2>
+                <h2 style="color: #0a3a5e; margin: 0;font-family:Georgia, serif;">PROJECT DRISHTI</h2>
             </div>
             """,
             unsafe_allow_html=True
         )
     except FileNotFoundError:
         st.markdown(
-            "<h2 style='text-align: center; color: #0a3a5e;font-family:Georgia, serif;'>TEAM SANKET</h2>",
+            "<h2 style='text-align: center; color: #0a3a5e;font-family:Georgia, serif;'>PROJECT DRISHT</h2>",
             unsafe_allow_html=True
         )
 
@@ -139,7 +139,7 @@ with tab2:
             st.subheader("Student Dropout Risk Distribution")
             risk_counts = df["Risk"].value_counts()
             fig, ax = plt.subplots()
-            colors = ['#ff4b4b', '#f5d90a', '#90ee90']  # High, Medium, Low
+            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # High, Medium, Low
             ax.pie(risk_counts.values, labels=[f"{r} ({c})" for r,c in zip(risk_counts.index,risk_counts.values)],
                    colors=colors, autopct='%1.1f%%', startangle=90, textprops={'fontsize':10})
             ax.axis('equal')
