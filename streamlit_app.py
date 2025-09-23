@@ -196,32 +196,33 @@ with tab6:
         st.dataframe(df[["StudentID","FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details =========================
+# ========================= # Student Details =========================
 with tab7:
     st.header("🔍 Individual Student Overview")
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
-        df = st.session_state["data"]
+        df = calculate_risk_scores(st.session_state["data"])
         student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
-        student = df[df["StudentID"]==student_id].iloc[0]
+        student = df[df["StudentID"] == student_id].iloc[0]
 
         st.write(f"**Attendance:** {student['Attendance']}%")
         st.write(f"**Last Sem Marks:** {student['LastSemMarks']}")
         st.write(f"**Current Sem Marks:** {student['CurrentSemMarks']}")
         st.write(f"**Backlog Assignments:** {student['BacklogAssignments']}")
         st.write(f"**Assignments Submitted:** {student['AssignmentSubmission']}%")
-        st.write(f"**Fees Due:** {'Yes' if student['FeesDue']==1 else 'No'}")
+        st.write(f"**Fees Due:** {'Yes' if student['FeesDue'] == 1 else 'No'}")
 
-        # Risk Score Calculation
-        student_score = 100 - (0.3*student['Attendance'] + 0.3*((student['LastSemMarks']+student['CurrentSemMarks'])/2)
-                                + 0.2*student['AssignmentSubmission'] - student['BacklogAssignments']*5 - student['FeesDue']*20)
-        student_score = max(0, round(student_score,1))
+        # Risk Score (already calculated in calculate_risk_scores)
+        student_score = student["RiskScore"]
+        risk = student["Risk"]
+
         st.write(f"**Risk Score:** {student_score}")
 
-        if student_score>=75: risk="High Risk"
-        elif student_score>=50: risk="Medium Risk"
-        else: risk="Low Risk"
-        st.markdown(f"**Dropout Risk:** <span style='color:{'red' if risk=='High Risk' else 'orange' if risk=='Medium Risk' else 'green'}; font-weight:bold'>{risk}</span>", unsafe_allow_html=True)
+        st.markdown(
+            f"**Dropout Risk:** <span style='color:{'red' if risk=='High Risk' else 'orange' if risk=='Medium Risk' else 'green'}; font-weight:bold'>{risk}</span>",
+            unsafe_allow_html=True
+        )
 
 # ========================= # About =========================
 with tab8:
