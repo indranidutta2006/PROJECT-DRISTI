@@ -11,79 +11,11 @@ st.set_page_config(page_title="Project Drishti", layout="wide")
 
 IMG_PATH = "assets/team_banner.png"
 
-try:
-    # Load and resize image
-    image = Image.open(IMG_PATH)
-    max_width = 100  # adjust width
-    aspect_ratio = image.height / image.width
-    new_height = int(max_width * aspect_ratio)
-    image = image.resize((max_width, new_height))
-
-    # Convert to base64
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode()
-
-    # Display image and text on the same line
-    st.markdown(
-        f"""
-        <div style="display: flex; align-items: center; justify-content: center;">
-            <img src="data:image/png;base64,{img_str}" width="{max_width}" height="{new_height}" style="margin-right: 15px;">
-            <h2 style="color: #2E86C1; margin: 0;">TEAM SANKET</h2>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-except FileNotFoundError:
-    st.markdown(
-        "<h2 style='text-align: center; color: #2E86C1;'>TEAM SANKET</h2>",
-        unsafe_allow_html=True
-    )
-✅ What changed:
-Combined image and text in one <div> using display:flex → same line.
-
-Added align-items:center → vertical alignment.
-
-Added margin-right:15px → small space between image and text.
-
-Removed the separate st.image() block.
-
-After this, the image and “TEAM SANKET” appear side by side at the top of the page.
-
-If you want, I can also integrate this into your full app so it’s ready to paste in place of lines 13–36.
-
-Do you want me to do that?
-
-
-
-
-
-
-
-You said:
-getting error
-
-
-ChatGPT said:
-Ah — the error likely comes from mixing Image from PIL with base64 encoding and possibly the image file not being found. Let’s simplify and make it robust for Streamlit Cloud or local, and ensure image + text are on the same line.
-
-Here’s a self-contained version you can replace lines 13–36 with:
-
-python
-Copy code
-import streamlit as st
-from PIL import Image
-import base64
-from io import BytesIO
-
-IMG_PATH = "assets/team_banner.png"
-
 def display_banner():
     try:
         # Load image
         image = Image.open(IMG_PATH)
-        max_width = 100
+        max_width = 100  # adjust as needed
         aspect_ratio = image.height / image.width
         new_height = int(max_width * aspect_ratio)
         image = image.resize((max_width, new_height))
@@ -93,7 +25,7 @@ def display_banner():
         image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode()
 
-        # Display image + text in one line
+        # Display image + text on same line
         st.markdown(
             f"""
             <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
@@ -110,14 +42,8 @@ def display_banner():
             unsafe_allow_html=True
         )
 
-# Call function at the top of your app
+# Call the banner at the top of the app
 display_banner()
-st.markdown("""
-    <style>
-    [data-testid="stSidebar"] {
-        display: none;
-    
-    }
     </style>
     <div style="text-align: center;">
         <h2 style="margin-top: -10px; color: #2E86C1;">TEAM SANKET</h2>
