@@ -174,14 +174,24 @@ with tab2:
             st.dataframe(sorted_df, height=table_height, hide_index=True)
 # ========================= # Attendance Page # =========================
 with tab3:
-    if "data" in st.session_state:
+    st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
         df = st.session_state["data"].copy()
         st.header("📅 Attendance Overview")
         st.bar_chart(df.set_index("StudentID")["Attendance"])
 
 # ========================= # Marks Page # =========================
 with tab4:
-    if "data" in st.session_state:
+    st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
         df = st.session_state["data"].copy()
         st.header("📊 Marks Overview")
         st.line_chart(df.set_index("StudentID")[["LastSemMarks", "CurrentSemMarks"]])
@@ -195,7 +205,12 @@ with tab5:
 
 # ========================= # Fees Status Page # =========================
 with tab6:
-    if "data" in st.session_state:
+    st.title("🏫 Project Drishti – Student Success Early Warning System")
+    st.markdown("Helping educators move from **reactive** to **proactive** mentoring")
+
+    if "data" not in st.session_state:
+        st.warning("⚠️ Please upload student data first.")
+    else:
         df = st.session_state["data"].copy()
         st.header("💰 Student Fees Status")
 
