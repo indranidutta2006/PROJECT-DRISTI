@@ -7,7 +7,7 @@ import numpy as np
 st.set_page_config(page_title="Project Drishti", layout="wide")
 
 # ========================= # Custom Theme Styling # =========================
-st.image("assets/team_banner.png", use_container_width=True)
+st.image("assets/team_banner.png", width=600, height=200)
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
