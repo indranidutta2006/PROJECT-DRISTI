@@ -19,7 +19,7 @@ try:
 
     # Display the image centered using st.image inside a container
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.image(image, use_column_width=False)
+    st.image(image, use_container_width=False)
     st.markdown("</div>", unsafe_allow_html=True)
 
 except FileNotFoundError:
