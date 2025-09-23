@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import base64
+from io import BytesIO
 
 # ========================= # Page Config # =========================
 st.set_page_config(page_title="Project Drishti", layout="wide")
