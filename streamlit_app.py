@@ -138,7 +138,7 @@ with tab2:
 
             # Fixed color mapping (always same order)
             risk_order = ["High Risk", "Medium Risk", "Low Risk"]
-            colors = {"High Risk": "red", "Medium Risk": "yellow", "Low Risk": "green"}
+            colors = {"High Risk": "red", "Medium Risk": "yellow", "Low Risk": "lightgreen"}
 
             values = [risk_counts.get(r, 0) for r in risk_order]
             labels = [f"{r} ({c})" for r, c in zip(risk_order, values)]
