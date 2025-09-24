@@ -197,16 +197,19 @@ with tab6:
         st.dataframe(df[["StudentID","FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details =========================
-# ========================= # Student Details =========================
 with tab7:
     st.header("🔍 Individual Student Overview")
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
+        # Calculate risk scores
         df = calculate_risk_scores(st.session_state["data"])
+        
+        # Student selector
         student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
         student = df[df["StudentID"] == student_id].iloc[0]
 
+        # Show student details
         st.write("**Attendance:** {}%".format(student['Attendance']))
         st.write("**Last Sem Marks:** {}".format(student['LastSemMarks']))
         st.write("**Current Sem Marks:** {}".format(student['CurrentSemMarks']))
@@ -214,7 +217,7 @@ with tab7:
         st.write("**Assignments Submitted:** {}%".format(student['AssignmentSubmission']))
         st.write("**Fees Due:** {}".format("Yes" if student['FeesDue'] == 1 else "No"))
 
-        # StAR Score (already calculated in calculate_risk_scores)
+        # StAR Score and Risk
         star_score = student["StARScore"]
         risk = student["Risk"]
 
@@ -222,29 +225,29 @@ with tab7:
 
         st.markdown(
             "**Dropout Risk:** <span style='color:{}; font-weight:bold'>{}</span>".format(
-                "red" if risk == "High Risk" else "orange" if risk == "Medium Risk" else "green",
+                "red" if risk.lower().startswith("high") else "orange" if risk.lower().startswith("medium") else "green",
                 risk
             ),
             unsafe_allow_html=True
         )
 
-        # ✅ Dynamic Recommended Actions
-        if risk == "High Risk":
-            st.write(
+        # ✅ Recommended Actions (always shows now)
+        if risk.lower().startswith("high"):
+            st.markdown(
                 "**Recommended Actions:**\n"
-                "1. Schedule Meeting with {}.\n"
+                "1. Schedule Meeting with **{}**.\n"
                 "2. Contact Guardians.\n".format(student['StudentID'])
             )
-        elif risk == "Medium Risk":
-            st.write(
+        elif risk.lower().startswith("medium"):
+            st.markdown(
                 "**Recommended Actions:**\n"
-                "1. Arrange Counseling Session for {}.\n"
+                "1. Arrange Counseling Session for **{}**.\n"
                 "2. Monitor Progress Weekly.\n".format(student['StudentID'])
             )
         else:  # Low Risk
-            st.write(
+            st.markdown(
                 "**Recommended Actions:**\n"
-                "1. Encourage {} to keep up the good work.\n"
+                "1. Encourage **{}** to keep up the good work.\n"
                 "2. Monitor Monthly.\n".format(student['StudentID'])
             )
 # ========================= # About =========================
