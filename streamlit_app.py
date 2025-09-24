@@ -253,7 +253,7 @@ with tab7:
                 "2. Monitor Monthly.".format(student['StudentID']),
                 unsafe_allow_html=True
             )
-            
+            )
 # ========================= # About =========================
 with tab8:
     st.header("ℹ️ About Project Drishti")
