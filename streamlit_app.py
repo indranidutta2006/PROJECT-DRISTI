@@ -138,7 +138,7 @@ with tab2:
             st.subheader("Student Dropout Risk Distribution")
             risk_counts = df["Risk"].value_counts()
             fig, ax = plt.subplots()
-            colors = ['#90ee90', '#f5d90a', '#ff4b4b']  # Low, Medium, High
+            colors = ['#ff4b4b', '#f5d90a','#90ee90']  # Low, Medium, High
             ax.pie(
                 risk_counts.values,
                 labels=[f"{r} ({c})" for r, c in zip(risk_counts.index, risk_counts.values)],
@@ -231,24 +231,28 @@ with tab7:
             unsafe_allow_html=True
         )
 
-        # ✅ Recommended Actions (always shows now)
+        # ✅ Recommended Actions (now forced to show with <br>)
         if risk.lower().startswith("high"):
             st.markdown(
-                "**Recommended Actions:**\n"
-                "1. Schedule Meeting with **{}**.\n"
-                "2. Contact Guardians.\n".format(student['StudentID'])
+                "**Recommended Actions:**<br>"
+                "1. Schedule Meeting with <b>{}</b>.<br>"
+                "2. Contact Guardians.".format(student['StudentID']),
+                unsafe_allow_html=True
             )
         elif risk.lower().startswith("medium"):
             st.markdown(
-                "**Recommended Actions:**\n"
-                "1. Arrange Counseling Session for **{}**.\n"
-                "2. Monitor Progress Weekly.\n".format(student['StudentID'])
+                "**Recommended Actions:**<br>"
+                "1. Arrange Counseling Session for <b>{}</b>.<br>"
+                "2. Monitor Progress Weekly.".format(student['StudentID']),
+                unsafe_allow_html=True
             )
         else:  # Low Risk
             st.markdown(
-                "**Recommended Actions:**\n"
-                "1. Encourage **{}** to keep up the good work.\n"
-                "2. Monitor Monthly.\n".format(student['StudentID'])
+                "**Recommended Actions:**<br>"
+                "1. Encourage <b>{}</b> to keep up the good work.<br>"
+                "2. Monitor Monthly.".format(student['StudentID']),
+                unsafe_allow_html=True
+            )
             )
 # ========================= # About =========================
 with tab8:
