@@ -197,6 +197,7 @@ with tab6:
         st.dataframe(df[["StudentID","FeesDue"]].style.applymap(highlight_fees, subset=["FeesDue"]))
 
 # ========================= # Student Details =========================
+# ========================= # Student Details =========================
 with tab7:
     st.header("🔍 Individual Student Overview")
     if "data" not in st.session_state:
@@ -206,28 +207,46 @@ with tab7:
         student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
         student = df[df["StudentID"] == student_id].iloc[0]
 
-        st.write(f"**Attendance:** {student['Attendance']}%")
-        st.write(f"**Last Sem Marks:** {student['LastSemMarks']}")
-        st.write(f"**Current Sem Marks:** {student['CurrentSemMarks']}")
-        st.write(f"**Backlog Assignments:** {student['BacklogAssignments']}")
-        st.write(f"**Assignments Submitted:** {student['AssignmentSubmission']}%")
-        st.write(f"**Fees Due:** {'Yes' if student['FeesDue'] == 1 else 'No'}")
+        st.write("**Attendance:** {}%".format(student['Attendance']))
+        st.write("**Last Sem Marks:** {}".format(student['LastSemMarks']))
+        st.write("**Current Sem Marks:** {}".format(student['CurrentSemMarks']))
+        st.write("**Backlog Assignments:** {}".format(student['BacklogAssignments']))
+        st.write("**Assignments Submitted:** {}%".format(student['AssignmentSubmission']))
+        st.write("**Fees Due:** {}".format("Yes" if student['FeesDue'] == 1 else "No"))
 
         # StAR Score (already calculated in calculate_risk_scores)
         star_score = student["StARScore"]
         risk = student["Risk"]
 
-        st.write(f"**StAR Score:** {star_score}")
+        st.write("**StAR Score:** {}".format(star_score))
 
         st.markdown(
-            f"**Dropout Risk:** <span style='color:{'red' if risk=='High Risk' else 'orange' if risk=='Medium Risk' else 'green'}; font-weight:bold'>{risk}</span>",
+            "**Dropout Risk:** <span style='color:{}; font-weight:bold'>{}</span>".format(
+                "red" if risk == "High Risk" else "orange" if risk == "Medium Risk" else "green",
+                risk
+            ),
             unsafe_allow_html=True
         )
-        if student["StARScore"]>=75:
-        st.write(f"**Recommended Actions:**\n" 
-                 f"1.Schedule Meeting with {student['StudentID'].\n" 
-                 f"2.Contact Guardians.\n"); 
 
+        # ✅ Dynamic Recommended Actions
+        if risk == "High Risk":
+            st.write(
+                "**Recommended Actions:**\n"
+                "1. Schedule Meeting with {}.\n"
+                "2. Contact Guardians.\n".format(student['StudentID'])
+            )
+        elif risk == "Medium Risk":
+            st.write(
+                "**Recommended Actions:**\n"
+                "1. Arrange Counseling Session for {}.\n"
+                "2. Monitor Progress Weekly.\n".format(student['StudentID'])
+            )
+        else:  # Low Risk
+            st.write(
+                "**Recommended Actions:**\n"
+                "1. Encourage {} to keep up the good work.\n"
+                "2. Monitor Monthly.\n".format(student['StudentID'])
+            )
 # ========================= # About =========================
 with tab8:
     st.header("ℹ️ About Project Drishti")
