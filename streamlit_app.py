@@ -35,15 +35,13 @@ def display_banner():
         )
     except FileNotFoundError:
         st.markdown(
-            "<h2 style='text-align: center; color: #0a3a5e;font-family:Georgia, serif;'>PROJECT DRISHT</h2>",
+            "<h2 style='text-align: center; color: #0a3a5e;font-family:Georgia, serif;'>PROJECT DRISHTI</h2>",
             unsafe_allow_html=True
         )
 
 display_banner()
 
-
 # ========================= # Sidebar =========================
-#st.sidebar.title("Navigation")
 tabs = st.tabs(
     ["Upload Excel/CSV", "Dashboard", "Attendance", "Marks", "Assignments", "Fees Status", "Student Details", "About"]
 )
@@ -80,7 +78,6 @@ with tab1:
         except Exception as e:
             st.error(f"Error reading file: {e}")
 
-
 # ========================= # Risk Score Function =========================
 def calculate_risk_scores(df):
     star_scores = []
@@ -112,6 +109,7 @@ def calculate_risk_scores(df):
     df["StARScore"] = star_scores
     df["Risk"] = risk_labels
     return df
+
 # ========================= # Dashboard =========================
 with tab2:
     st.title("🏫 Project Drishti – Student Success Early Warning System")
@@ -137,12 +135,19 @@ with tab2:
         with col1:
             st.subheader("Student Dropout Risk Distribution")
             risk_counts = df["Risk"].value_counts()
+
+            # Fixed color mapping (always same order)
+            risk_order = ["High Risk", "Medium Risk", "Low Risk"]
+            colors = {"High Risk": "red", "Medium Risk": "yellow", "Low Risk": "green"}
+
+            values = [risk_counts.get(r, 0) for r in risk_order]
+            labels = [f"{r} ({c})" for r, c in zip(risk_order, values)]
+
             fig, ax = plt.subplots()
-            colors = ['#ffb4b', '#f5d90a','#90ee90']  # Low, Medium, High
             ax.pie(
-                risk_counts.values,
-                labels=[f"{r} ({c})" for r, c in zip(risk_counts.index, risk_counts.values)],
-                colors=colors,
+                values,
+                labels=labels,
+                colors=[colors[r] for r in risk_order],
                 autopct='%1.1f%%',
                 startangle=90,
                 textprops={'fontsize': 10}
@@ -202,10 +207,7 @@ with tab7:
     if "data" not in st.session_state:
         st.warning("⚠️ Please upload student data first.")
     else:
-        # Calculate risk scores
         df = calculate_risk_scores(st.session_state["data"])
-        
-        # Student selector
         student_id = st.selectbox("Select Student ID", df["StudentID"].unique())
         student = df[df["StudentID"] == student_id].iloc[0]
 
@@ -217,43 +219,41 @@ with tab7:
         st.write("**Assignments Submitted:** {}%".format(student['AssignmentSubmission']))
         st.write("**Fees Due:** {}".format("Yes" if student['FeesDue'] == 1 else "No"))
 
-        # StAR Score and Risk
         star_score = student["StARScore"]
         risk = student["Risk"]
 
         st.write("**StAR Score:** {}".format(star_score))
-
         st.markdown(
             "**Dropout Risk:** <span style='color:{}; font-weight:bold'>{}</span>".format(
-                "red" if risk.lower().startswith("high") else "orange" if risk.lower().startswith("medium") else "green",
+                "red" if risk == "High Risk" else "orange" if risk == "Medium Risk" else "green",
                 risk
             ),
             unsafe_allow_html=True
         )
 
-        # ✅ Recommended Actions (now forced to show with <br>)
-        if risk.lower().startswith("high"):
+        # Recommended Actions
+        if risk == "High Risk":
             st.markdown(
                 "**Recommended Actions:**<br>"
                 "1. Schedule Meeting with <b>{}</b>.<br>"
                 "2. Contact Guardians.".format(student['StudentID']),
                 unsafe_allow_html=True
             )
-        elif risk.lower().startswith("medium"):
+        elif risk == "Medium Risk":
             st.markdown(
                 "**Recommended Actions:**<br>"
                 "1. Arrange Counseling Session for <b>{}</b>.<br>"
                 "2. Monitor Progress Weekly.".format(student['StudentID']),
                 unsafe_allow_html=True
             )
-        else:  # Low Risk
+        else:
             st.markdown(
                 "**Recommended Actions:**<br>"
                 "1. Encourage <b>{}</b> to keep up the good work.<br>"
                 "2. Monitor Monthly.".format(student['StudentID']),
                 unsafe_allow_html=True
             )
-            )
+
 # ========================= # About =========================
 with tab8:
     st.header("ℹ️ About Project Drishti")
