@@ -223,8 +223,10 @@ with tab7:
             f"**Dropout Risk:** <span style='color:{'red' if risk=='High Risk' else 'orange' if risk=='Medium Risk' else 'green'}; font-weight:bold'>{risk}</span>",
             unsafe_allow_html=True
         )
-        if student["StARScore"]>=75;
-        st.write("**Recommended Actions:**\n 1.Schedule Meeting with {}.\n 2.Contact Guardians.\n".format(student['StudentID'])); 
+        if student["StARScore"]>=75:
+        st.write(f"**Recommended Actions:**\n" 
+                 f"1.Schedule Meeting with {student['StudentID'].\n" 
+                 f"2.Contact Guardians.\n"); 
 
 # ========================= # About =========================
 with tab8:
